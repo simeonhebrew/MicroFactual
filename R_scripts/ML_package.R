@@ -13,7 +13,7 @@ otu_table<- column_to_rownames(abundance, var = "Species")
 
 #Read metadata file
 metadata <- read_tsv("/Users/cimi_bioinformatics/Desktop/metadata_crc.txt")
-sample.labels <- as.factor(metadata$Group)
+sample.labels <- as.factor(na.omit(metadata$Group))
 
 
 #Example of thresholds for abundance and prevalence
