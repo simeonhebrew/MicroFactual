@@ -2,13 +2,25 @@ library(caret)
 library(randomForest)
 library(compositions) 
 library(ggplot2)
+library(readr)
+library(tibble)
 
 #1.Data filtering
 
+#Read abundance file
+abundance <- read_tsv("/Users/cimi_bioinformatics/Desktop/abundance_crc.txt")
+otu_table<- column_to_rownames(abundance, var = "Species")
+
+#Read metadata file
+metadata <- read_tsv("/Users/cimi_bioinformatics/Desktop/metadata_crc.txt")
+sample.labels <- as.factor(metadata$Group)
+
+
 #Example of thresholds for abundance and prevalence
-abundance_cutoff <- 0.00001
+abundance_cutoff <- 0.000001
 prevalence_cutoff <- 0.05
 
+otu_table <- abundance
 
 mean_abundance <- rowMeans(otu_table)
 
