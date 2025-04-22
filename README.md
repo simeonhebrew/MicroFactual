@@ -39,7 +39,7 @@ uv pip install -e .
 ### Running the package
 To run the package, you can use the following command:
 ```bash
-uv run main.py --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --model <model_name> --output_dir <output_directory>
+uv run microbiome-ml --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --model <model_name> --output_dir <output_directory>
 ```
 Where:
 - `<abundance_file>`: Path to the abundance data file.
@@ -47,4 +47,49 @@ Where:
 - `<target_column>`: The target column for the model.
 - `<model_name>`: The name of the machine learning model to use.
 - `<output_directory>`: Path to the output directory where results will be saved.
-```
+- 
+### Using the Makefile
+
+You can use the provided `Makefile` to simplify common tasks in the project. Below are the available targets:
+
+- **Create a virtual environment**:
+  ```bash
+  make venv
+  ```
+  This will create a virtual environment using `uv` with the specified Python version.
+
+- **Activate the virtual environment**:
+  ```bash
+  make activate
+  ```
+  This will display instructions to activate the virtual environment manually.
+
+- **Install dependencies and the package**:
+  ```bash
+  make install
+  ```
+  This will install all dependencies and the package itself.
+
+- **Run the package**:
+  ```bash
+  make run
+  ```
+  This will execute the pipeline with default or specified parameters. You can customize the parameters by editing the `Makefile` or passing them as environment variables.
+
+- **Run tests**:
+  ```bash
+  make test
+  ```
+  This will run the tests using `pytest`. Make sure to have the test files in the appropriate directory.
+
+- **Clean the output directory**:
+  ```bash
+  make clean
+  ```
+  This will remove the output directory and its contents.
+
+- **Display help**:
+  ```bash
+  make help
+  ```
+  This will display a list of available targets and their descriptions.
