@@ -1,21 +1,4 @@
-import numpy as np
-
-rf_model = None
-
-data = np.random.randint(0, 100, 100)
-
-abundance_cutoff = 0.00001
-prevalence_cutoff = 0.05
-
-mean_abundance = None  # TODO
-
-# def clr_transform(data, log_n0: float = 1e-06):
-#     pass
-
-# def predict(model, data, type):
-#     return data
-
-#%%
+import logging
 
 import pandas as pd
 import numpy as np
@@ -86,16 +69,26 @@ def main():
     METADATA_PATH = "/Users/lawrenceadu-gyamfi/Documents/PERSONAL/PROJECTS/ML_Microbiome_Package/Dataset/metadata_crc.txt"
 
     # Pipeline
+    logging.info("Loading data...")
     abundance, labels = load_data(ABUNDANCE_PATH, METADATA_PATH)
+    
+    logging.info("Filtering and transforming data...")
     filtered_data = filter_data(abundance)
     clr_data = clr_transform(filtered_data)
 
+    logging.info("Training the model...")
     model = train_model(clr_data, labels)
+    
+    logging.info("Predicting probabilities...")
     probs = model.predict_proba(clr_data)[:, 1]
 
+    logging.info("Plotting ROC curve...")
     plot_roc(labels, probs)
 
+    logging.info("Pipeline completed successfully.")
 #%%
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Starting the pipeline...")
     main()
 # %%

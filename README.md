@@ -15,3 +15,29 @@ workflows.
 - Parallelization
 
 - Workflow structure
+
+## Executing python version
+
+We use uv as the python package manager to create a virtual environment with the required dependencies.
+To install uv, see the following link:
+[https://docs.astral.sh/uv/#installation](https://docs.astral.sh/uv/#installation)
+
+### Installing the package
+To create a virtual environment with the required dependencies, run the following command in your terminal:
+```bash
+uv venv <env_name> --python <python_version>
+```
+To activate the virtual environment, run the following command in your terminal:
+```bash
+source <env_name>/bin/activate
+```
+Install the project to install all the dependencies as well as the package itself:
+```bash
+uv pip install -e .
+```
+
+### Running the package
+To run the package, you can use the following command:
+```bash
+uv run main.py
+```
