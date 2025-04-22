@@ -39,5 +39,12 @@ uv pip install -e .
 ### Running the package
 To run the package, you can use the following command:
 ```bash
-uv run main.py
+uv run main.py --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --model <model_name> --output_dir <output_directory>
+```
+Where:
+- `<abundance_file>`: Path to the abundance data file.
+- `<metadata_file>`: Path to the metadata file.
+- `<target_column>`: The target column for the model.
+- `<model_name>`: The name of the machine learning model to use.
+- `<output_directory>`: Path to the output directory where results will be saved.
 ```

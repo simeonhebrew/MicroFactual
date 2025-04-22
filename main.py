@@ -1,4 +1,6 @@
 import logging
+import argparse
+import os
 
 import pandas as pd
 import numpy as np
@@ -8,14 +10,14 @@ from sklearn.metrics import roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
 
 #%%
-def load_data(abundance_path, metadata_path):
+def load_data(abundance_file, metadata_file, target_column='Group'):
     """Load and preprocess data"""
-    abundance = pd.read_csv(abundance_path, sep='\t', index_col='Species')
-    metadata = pd.read_csv(metadata_path, sep='\t')
+    abundance = pd.read_csv(abundance_file, sep='\t', index_col='Species')
+    metadata = pd.read_csv(metadata_file, sep='\t')
     
     # Clean metadata and get labels
-    metadata_clean = metadata.dropna(subset=['Group'])
-    sample_labels = metadata_clean['Group'].astype('category').cat.codes
+    metadata_clean = metadata.dropna(subset=[target_column])
+    sample_labels = metadata_clean[target_column].astype('category').cat.codes
     
     # Align abundance data with cleaned metadata
     abundance = abundance[metadata_clean['Sample ID']]
@@ -47,7 +49,7 @@ def train_model(X, y):
     grid_search.fit(X, y)
     return grid_search
 
-def plot_roc(y_true, y_probs):
+def plot_roc(y_true, y_probs, save_path=None):
     """Plot ROC curve"""
     fpr, tpr, _ = roc_curve(y_true, y_probs)
     roc_auc = roc_auc_score(y_true, y_probs)
@@ -59,18 +61,20 @@ def plot_roc(y_true, y_probs):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic')
     plt.legend()
+    if save_path:
+        save_path = os.path.join(save_path, 'roc_curve.png')
+        plt.savefig(save_path)
+        logging.info(f"ROC curve saved to {save_path}")
     plt.show()
 
 
 #%%
-def main():
-
-    ABUNDANCE_PATH = "/Users/lawrenceadu-gyamfi/Documents/PERSONAL/PROJECTS/ML_Microbiome_Package/Dataset/abundance_crc.txt"
-    METADATA_PATH = "/Users/lawrenceadu-gyamfi/Documents/PERSONAL/PROJECTS/ML_Microbiome_Package/Dataset/metadata_crc.txt"
-
+def main(abundance_path: str, metadata_path: str, target_column: str = 'Group', output_dir: str = None):
+    """Main function to run the pipeline"""
     # Pipeline
     logging.info("Loading data...")
-    abundance, labels = load_data(ABUNDANCE_PATH, METADATA_PATH)
+    abundance, labels = load_data(abundance_file=abundance_path, metadata_file=metadata_path, target_column=target_column)
+    logging.info(f"Data loaded: {abundance.shape[0]} features, {abundance.shape[1]} samples")
     
     logging.info("Filtering and transforming data...")
     filtered_data = filter_data(abundance)
@@ -81,14 +85,31 @@ def main():
     
     logging.info("Predicting probabilities...")
     probs = model.predict_proba(clr_data)[:, 1]
+    # save the results
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        probs_df = pd.DataFrame(probs, index=clr_data.index, columns=['Probabilities'])
+        probs_df.to_csv(os.path.join(output_dir, 'predicted_probabilities.csv'), index=True)
+        logging.info(f"Predicted probabilities saved to {os.path.join(output_dir, 'predicted_probabilities.csv')}")
 
     logging.info("Plotting ROC curve...")
-    plot_roc(labels, probs)
+    plot_roc(labels, probs, save_path=output_dir)
 
     logging.info("Pipeline completed successfully.")
 #%%
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting the pipeline...")
-    main()
+    parser = argparse.ArgumentParser(description="Microbiome ML Pipeline")
+    parser.add_argument('--abundance', type=str, required=True, help='Path to abundance data file')
+    parser.add_argument('--metadata', type=str, required=True, help='Path to metadata file')
+    parser.add_argument('--target', type=str, default='Group', help='Target variable in metadata')
+    parser.add_argument('--output_dir', type=str, default="output", help='Output directory for saving results')
+    args = parser.parse_args()
+    abundance_path = args.abundance
+    metadata_path = args.metadata
+    target_column = args.target
+    output_dir = args.output_dir
+    main(abundance_path, metadata_path, target_column, output_dir)
 # %%
+    
