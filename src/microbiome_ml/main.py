@@ -21,7 +21,8 @@ def run_pipeline(abundance_path: str, metadata_path: str, target_column: str, ou
     clr_data = clr_transform(filtered_data)
 
     logger.info("Training the model...")
-    model = train_model(clr_data, labels)
+    # Set n_jobs=1 to avoid multiprocessing issues
+    model = train_model(clr_data, labels, n_jobs=1)
 
     logger.info("Predicting probabilities...")
     probs = model.predict_proba(clr_data)[:, 1]
