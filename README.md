@@ -3,6 +3,10 @@
 A user-friendly python framework for microbiome machine learning 
 workflows.
 
+## Recent Updates (June 2025)
+
+- **Improved Flexibility**: Added support for configurable sample ID column names via the `--sample_column_name` parameter (default: "Sample ID")
+- **Code Standardization**: Improved code formatting and consistency across the codebase
 
 ### Features to implement
 
@@ -39,15 +43,15 @@ uv pip install -e .
 ### Running the package
 To run the package, you can use the following command:
 ```bash
-uv run microbiome-ml --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --model <model_name> --output_dir <output_directory>
+uv run microbiome-ml --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --output_dir <output_directory> --sample_column_name <sample_id_column>
 ```
 Where:
 - `<abundance_file>`: Path to the abundance data file.
 - `<metadata_file>`: Path to the metadata file.
 - `<target_column>`: The target column for the model.
-- `<model_name>`: The name of the machine learning model to use.
 - `<output_directory>`: Path to the output directory where results will be saved.
-- 
+- `<sample_id_column>`: (Optional) The column name for sample IDs in metadata (default: "Sample ID").
+
 ### Using the Makefile
 
 You can use the provided `Makefile` to simplify common tasks in the project. Below are the available targets:

@@ -8,6 +8,7 @@ ABUNDANCE_FILE ?= Dataset/abundance_crc.txt
 METADATA_FILE ?= Dataset/metadata_crc.txt
 TARGET_COLUMN ?= Group
 OUTPUT_DIR ?= output
+SAMPLE_COLUMN_ID ?= "Sample ID"
 
 # Create a virtual environment
 venv:
@@ -23,7 +24,7 @@ install:
 
 # Run the package
 run:
-	uv run microbiome-ml --abundance $(ABUNDANCE_FILE) --metadata $(METADATA_FILE) --target $(TARGET_COLUMN) --output_dir $(OUTPUT_DIR)
+	uv run microbiome-ml --abundance $(ABUNDANCE_FILE) --metadata $(METADATA_FILE) --target $(TARGET_COLUMN) --output_dir $(OUTPUT_DIR) --sample_column_name ${SAMPLE_COLUMN_ID}
 
 test:
 	uv run pytest
