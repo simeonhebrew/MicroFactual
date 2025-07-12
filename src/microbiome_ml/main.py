@@ -56,7 +56,7 @@ def run_pipeline(
 
 
 def main() -> None:
-    """Main entry point for the pipeline."""
+    """Run the main entry point for the pipeline."""
     try:
         args = parse_args()
         run_pipeline(
