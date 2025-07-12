@@ -20,6 +20,10 @@ def load_data(
 
 def filter_data(abundance, abundance_cutoff=1e-6, prevalence_cutoff=0.05):
     """Filter features based on abundance and prevalence"""
+    if abundance_cutoff < 0:
+        raise ValueError("abundance_cutoff must be non-negative")
+    if not (0 <= prevalence_cutoff <= 1):
+        raise ValueError("prevalence_cutoff must be between 0 and 1")
     # Abundance filter
     mean_abundance = abundance.mean(axis=1)
     abundance_filtered = abundance.loc[mean_abundance >= abundance_cutoff]
