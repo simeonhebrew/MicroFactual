@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [main, master]
 
+  workflow_dispatch:
+    
+permissions:
+  contents: write
+
+
+
+
 jobs:
   build-deploy-docs:
     runs-on: ubuntu-latest
