@@ -1,0 +1,40 @@
+name: Docs
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv (fast Python installer)
+        run: |
+          pip install uv
+
+      - name: Install dependencies (including docs)
+        run: |
+          uv pip install --system .
+          uv pip install --system sphinx sphinx-autodoc-typehints sphinx_rtd_theme
+
+      - name: Build Sphinx docs
+        run: |
+          sphinx-build -b html docs docs/_build/html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
+          publish_branch: gh-pages
+          force_orphan: true

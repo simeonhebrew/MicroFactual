@@ -1,9 +1,37 @@
 [project]
 name = "microbiome-ml"
 version = "0.1.0"
-description = "Add your description here"
+description = "A user-friendly Python framework for microbiome machine learning workflows"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Lawrence Adu-Gyamfi", email = "your.email@example.com"}
+]
+maintainers = [
+    {name = "Lawrence Adu-Gyamfi", email = "your.email@example.com"}
+]
+keywords = [
+    "microbiome",
+    "machine-learning", 
+    "bioinformatics",
+    "metagenomics",
+    "classification",
+    "random-forest"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 dependencies = [
     "dice-ml>=0.9",
@@ -19,6 +47,7 @@ dependencies = [
 dev = [
     "ipykernel>=6.29.5",
     "pytest>=8.3.5",
+    "pytest-cov>=6.2.1",
 ]
 
 [project.scripts]
@@ -30,3 +59,18 @@ packages = ["src/microbiome_ml"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "I", "N", "D", "UP", "B", "A", "C90"]
+ignore = ["E501", "N803"]
+exclude = [".git", ".venv", "env_microbiome", "output", "__pycache__", "build", "dist"]
+# Example: To ignore docstring rules in tests, uncomment below:
+# per-file-ignores = {"test/*.py" = ["D"]}
+
+[tool.ruff.format]
+# Use ruff's built-in formatter for consistent code style
+docstring-code-format = true
+quote-style = "preserve"
+indent-style = "space"
+line-ending = "auto"

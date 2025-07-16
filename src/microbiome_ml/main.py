@@ -1,7 +1,9 @@
+"""Main CLI and pipeline entry point for microbiome-ml."""
+
 import sys
 import uuid
 
-from microbiome_ml.data_processing import load_data, filter_data, clr_transform
+from microbiome_ml.data_processing import clr_transform, filter_data, load_data
 from microbiome_ml.modeling import train_model
 from microbiome_ml.utils import get_logger, parse_args, save_results
 from microbiome_ml.visualisation import save_roc_curve
@@ -54,7 +56,7 @@ def run_pipeline(
 
 
 def main() -> None:
-    """Main entry point for the pipeline."""
+    """Run the main entry point for the pipeline."""
     try:
         args = parse_args()
         run_pipeline(
