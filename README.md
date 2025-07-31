@@ -1,7 +1,6 @@
-# ML_Microbiome_Package
+# MicroFactual
 
-A user-friendly python framework for microbiome machine learning 
-workflows.
+MicroFactual is a user-friendly python framework for performing interpretable microbiome machine learning workflows based on counterfactual explanations.
 
 ## Recent Updates (June 2025)
 
@@ -10,15 +9,12 @@ workflows.
 
 ### Features to implement
 
-- Allowing for the use of different ML models
+- Allowing for the integration of linear and tree-based models
 
-- Intergrating a layer of explainability of the ML models
-
-- Allowing for user parameter optimization at each step
+- Allowing for user parameter optimization at each workflow level
 
 - Parallelization
 
-- Workflow structure
 
 ## Executing python version
 
