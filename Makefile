@@ -2,10 +2,10 @@
 
 .PHONY : venv activate install run test clean help
 # Variables
-ENV_NAME ?= ml_microbiome_env
-PYTHON_VERSION ?= python3.9
-ABUNDANCE_FILE ?= Dataset/abundance_crc.txt
-METADATA_FILE ?= Dataset/metadata_crc.txt
+ENV_NAME ?= ml_microfactual_env
+PYTHON_VERSION ?= python3.12
+ABUNDANCE_FILE ?= datasets/abundance_crc.txt
+METADATA_FILE ?= datasets/metadata_crc.txt
 TARGET_COLUMN ?= Group
 OUTPUT_DIR ?= output
 SAMPLE_COLUMN_ID ?= "Sample ID"
@@ -24,7 +24,7 @@ install:
 
 # Run the package
 run:
-	uv run microbiome-ml --abundance $(ABUNDANCE_FILE) --metadata $(METADATA_FILE) --target $(TARGET_COLUMN) --output_dir $(OUTPUT_DIR) --sample_column_name ${SAMPLE_COLUMN_ID}
+	uv run microfactual --abundance $(ABUNDANCE_FILE) --metadata $(METADATA_FILE) --target $(TARGET_COLUMN) --output_dir $(OUTPUT_DIR) --sample_column_name ${SAMPLE_COLUMN_ID}
 
 test:
 	uv run pytest

@@ -1,7 +1,7 @@
 User Guide
 ==========
 
-This section provides practical guides and tips for using Microbiome-ML in your research.
+This section provides practical guides and tips for using microfactual in your research.
 
 Typical Workflow
 ----------------
@@ -15,7 +15,7 @@ Example: Full Pipeline
 
 .. code-block:: bash
 
-    microbiome-ml --abundance data/abundance.txt --metadata data/metadata.txt --output_dir results/
+    microfactual --abundance data/abundance.txt --metadata data/metadata.txt --output_dir results/
 
 Example: Custom Python Workflow
 -------------------------------

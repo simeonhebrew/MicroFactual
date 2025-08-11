@@ -25,7 +25,7 @@ def test_main_pipeline(tmp_path, mock_abundance, mock_metadata):
         str(output_dir),
     ]
 
-    with patch("sys.argv", ["microbiome-ml"] + mock_args):
+    with patch("sys.argv", ["microfactual"] + mock_args):
         main()
 
     # Check output files - they should be in a UUID subdirectory

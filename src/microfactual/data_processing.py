@@ -1,4 +1,4 @@
-"""Data processing utilities for microbiome-ml."""
+"""Data processing utilities for microfactual."""
 
 import numpy as np
 import pandas as pd

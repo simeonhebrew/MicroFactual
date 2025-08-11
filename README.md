@@ -39,7 +39,7 @@ uv pip install -e .
 ### Running the package
 To run the package, you can use the following command:
 ```bash
-uv run microbiome-ml --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --output_dir <output_directory> --sample_column_name <sample_id_column>
+uv run microfactual --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --output_dir <output_directory> --sample_column_name <sample_id_column>
 ```
 Where:
 - `<abundance_file>`: Path to the abundance data file.

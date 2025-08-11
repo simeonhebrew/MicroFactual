@@ -1,4 +1,4 @@
-Microbiome-ML Documentation
+microfactual Documentation
 ===========================
 
 .. toctree::
@@ -7,7 +7,7 @@ Microbiome-ML Documentation
 
    modules
 
-Microbiome-ML API Reference
+microfactual API Reference
 ===========================
 
 Data Processing

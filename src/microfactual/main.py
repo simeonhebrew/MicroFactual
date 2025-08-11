@@ -1,4 +1,4 @@
-"""Main CLI and pipeline entry point for microbiome-ml."""
+"""Main CLI and pipeline entry point for microfactual."""
 
 import sys
 import uuid

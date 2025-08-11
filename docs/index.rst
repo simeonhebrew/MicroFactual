@@ -1,4 +1,4 @@
-Microbiome-ML Documentation
+microfactual Documentation
 ===========================
 
 A user-friendly Python framework for microbiome machine learning workflows.
@@ -29,8 +29,8 @@ Quickstart
 
 .. code-block:: bash
 
-    pip install microbiome-ml
-    microbiome-ml --abundance path/to/abundance.txt --metadata path/to/metadata.txt --output_dir results/
+    pip install microfactual
+    microfactual --abundance path/to/abundance.txt --metadata path/to/metadata.txt --output_dir results/
 
 Or use as a library:
 

@@ -1,4 +1,4 @@
-"""Visualization utilities for microbiome-ml."""
+"""Visualization utilities for microfactual."""
 
 import logging
 import os
