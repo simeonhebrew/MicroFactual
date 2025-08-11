@@ -1,6 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 
-from microbiome_ml.main import clr_transform, train_model
+from microfactual.main import clr_transform, train_model
 
 
 def test_train_model(mock_abundance, mock_metadata):

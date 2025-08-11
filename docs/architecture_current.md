@@ -9,15 +9,15 @@ C4Context
     Person(scientist, "Microbiome Researcher", "Scientists studying microbiome data who need ML analysis tools")
     Person(advanced_user, "Advanced ML User", "Users who want to customize model parameters and workflows")
     
-    System(microbiome_ml, "Microbiome ML Package", "Python package for microbiome data analysis using machine learning")
+    System(microfactual, "Microbiome ML Package", "Python package for microbiome data analysis using machine learning")
     
     SystemDb(input_data, "Input Data Files", "Abundance tables and metadata files (TSV/CSV format)")
     SystemDb(output_data, "Output Results", "Predictions, visualizations, and model artifacts")
     
-    Rel(scientist, microbiome_ml, "Uses via CLI", "Command line interface")
-    Rel(advanced_user, microbiome_ml, "Uses via notebooks", "Jupyter notebooks")
-    Rel(microbiome_ml, input_data, "Reads", "File I/O")
-    Rel(microbiome_ml, output_data, "Writes", "File I/O")
+    Rel(scientist, microfactual, "Uses via CLI", "Command line interface")
+    Rel(advanced_user, microfactual, "Uses via notebooks", "Jupyter notebooks")
+    Rel(microfactual, input_data, "Reads", "File I/O")
+    Rel(microfactual, output_data, "Writes", "File I/O")
 ```
 
 ## Container Diagram (C4 Level 2)
@@ -28,7 +28,7 @@ C4Container
 
     Person(user, "User", "Microbiome researcher")
     
-    Container_Boundary(microbiome_ml_boundary, "Microbiome ML Package") {
+    Container_Boundary(microfactual_boundary, "Microbiome ML Package") {
         Container(cli_interface, "CLI Interface", "Python/argparse", "Command line entry point for the pipeline")
         Container(pipeline_orchestrator, "Pipeline Orchestrator", "Python", "Coordinates the ML workflow execution")
         Container(data_processor, "Data Processing Module", "Python/pandas/numpy", "Loads, filters, and transforms microbiome data")
@@ -56,7 +56,7 @@ C4Container
 C4Component
     title Component Diagram - Current Implementation
 
-    Container_Boundary(microbiome_ml_boundary, "Microbiome ML Package") {
+    Container_Boundary(microfactual_boundary, "Microbiome ML Package") {
         Component(main_py, "main.py", "Python", "Entry point with run_pipeline() and main() functions")
         
         Component(data_processing_py, "data_processing.py", "Python", "load_data(), filter_data(), clr_transform()")

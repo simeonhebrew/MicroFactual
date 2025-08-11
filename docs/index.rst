@@ -36,8 +36,8 @@ Or use as a library:
 
 .. code-block:: python
 
-    from microbiome_ml.data_processing import load_data, filter_data, clr_transform
-    from microbiome_ml.modeling import train_model
+    from microfactual.data_processing import load_data, filter_data, clr_transform
+    from microfactual.modeling import train_model
 
     abundance, labels = load_data('abundance.txt', 'metadata.txt')
     filtered = filter_data(abundance)

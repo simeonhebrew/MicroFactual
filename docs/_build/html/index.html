@@ -100,8 +100,8 @@ microbiome-ml<span class="w"> </span>--abundance<span class="w"> </span>path/to/
 </pre></div>
 </div>
 <p>Or use as a library:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">microbiome_ml.data_processing</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_data</span><span class="p">,</span> <span class="n">filter_data</span><span class="p">,</span> <span class="n">clr_transform</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">microbiome_ml.modeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">microfactual.data_processing</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_data</span><span class="p">,</span> <span class="n">filter_data</span><span class="p">,</span> <span class="n">clr_transform</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">microfactual.modeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_model</span>
 
 <span class="n">abundance</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s1">&#39;abundance.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;metadata.txt&#39;</span><span class="p">)</span>
 <span class="n">filtered</span> <span class="o">=</span> <span class="n">filter_data</span><span class="p">(</span><span class="n">abundance</span><span class="p">)</span>
@@ -126,32 +126,32 @@ microbiome-ml<span class="w"> </span>--abundance<span class="w"> </span>path/to/
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html#microbiome-ml-api-reference">Microbiome-ML API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microbiome_ml.data_processing">Data Processing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.data_processing.clr_transform"><code class="docutils literal notranslate"><span class="pre">clr_transform()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.data_processing.filter_data"><code class="docutils literal notranslate"><span class="pre">filter_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.data_processing.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microfactual.data_processing">Data Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.data_processing.clr_transform"><code class="docutils literal notranslate"><span class="pre">clr_transform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.data_processing.filter_data"><code class="docutils literal notranslate"><span class="pre">filter_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.data_processing.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microbiome_ml.modeling">Modeling</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.modeling.train_model"><code class="docutils literal notranslate"><span class="pre">train_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microfactual.modeling">Modeling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.modeling.train_model"><code class="docutils literal notranslate"><span class="pre">train_model()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microbiome_ml.utils">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.utils.create_output_dir"><code class="docutils literal notranslate"><span class="pre">create_output_dir()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.utils.get_logger"><code class="docutils literal notranslate"><span class="pre">get_logger()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.utils.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.utils.save_probabilities"><code class="docutils literal notranslate"><span class="pre">save_probabilities()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.utils.save_results"><code class="docutils literal notranslate"><span class="pre">save_results()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microfactual.utils">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.utils.create_output_dir"><code class="docutils literal notranslate"><span class="pre">create_output_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.utils.get_logger"><code class="docutils literal notranslate"><span class="pre">get_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.utils.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.utils.save_probabilities"><code class="docutils literal notranslate"><span class="pre">save_probabilities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.utils.save_results"><code class="docutils literal notranslate"><span class="pre">save_results()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microbiome_ml.visualisation">Visualization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.visualisation.plot_roc"><code class="docutils literal notranslate"><span class="pre">plot_roc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.visualisation.save_roc_curve"><code class="docutils literal notranslate"><span class="pre">save_roc_curve()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microfactual.visualisation">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.visualisation.plot_roc"><code class="docutils literal notranslate"><span class="pre">plot_roc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.visualisation.save_roc_curve"><code class="docutils literal notranslate"><span class="pre">save_roc_curve()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microbiome_ml.main">Main CLI</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#microbiome_ml.main.run_pipeline"><code class="docutils literal notranslate"><span class="pre">run_pipeline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-microfactual.main">Main CLI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#microfactual.main.run_pipeline"><code class="docutils literal notranslate"><span class="pre">run_pipeline()</span></code></a></li>
 </ul>
 </li>
 </ul>

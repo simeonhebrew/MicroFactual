@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from microbiome_ml.main import main
+from microfactual.main import main
 
 
 # Integration test

@@ -1,10 +1,8 @@
 # %%
 import dice_ml
-from dice_ml.utils import helpers  # helper functions
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from microbiome_ml.data_processing import load_data, filter_data, clr_transform
-from microbiome_ml.modeling import train_model
+from microfactual.data_processing import load_data, filter_data, clr_transform
+from microfactual.modeling import train_model
 
 # %%
 abundance_path = "../Dataset/abundance_crc.txt"

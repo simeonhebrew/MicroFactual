@@ -3,10 +3,10 @@
 import sys
 import uuid
 
-from microbiome_ml.data_processing import clr_transform, filter_data, load_data
-from microbiome_ml.modeling import train_model
-from microbiome_ml.utils import get_logger, parse_args, save_results
-from microbiome_ml.visualisation import save_roc_curve
+from microfactual.data_processing import clr_transform, filter_data, load_data
+from microfactual.modeling import train_model
+from microfactual.utils import get_logger, parse_args, save_results
+from microfactual.visualisation import save_roc_curve
 
 app_logger = get_logger(__name__)
 
