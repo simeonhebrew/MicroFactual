@@ -1,4 +1,4 @@
-microfactual Documentation
+Microfactual Documentation
 ===========================
 
 A user-friendly Python framework for microbiome machine learning workflows.

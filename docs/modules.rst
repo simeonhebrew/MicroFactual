@@ -1,4 +1,4 @@
-microfactual Documentation
+Microfactual Documentation
 ===========================
 
 .. toctree::
@@ -7,7 +7,7 @@ microfactual Documentation
 
    modules
 
-microfactual API Reference
+Microfactual API Reference
 ===========================
 
 Data Processing

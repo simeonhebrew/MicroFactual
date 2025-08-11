@@ -32,8 +32,7 @@ jobs:
 
       - name: Install dependencies (including docs)
         run: |
-          uv pip install --system .
-          uv pip install --system sphinx sphinx-autodoc-typehints sphinx_rtd_theme
+          uv sync --group docs
 
       - name: Build Sphinx docs
         run: |
