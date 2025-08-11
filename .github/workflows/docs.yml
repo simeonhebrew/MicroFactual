@@ -21,22 +21,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: '3.12'
+          version: "latest"
 
-      - name: Install uv (fast Python installer)
+      - name: Install Python and dependencies
         run: |
-          pip install uv
-
-      - name: Install dependencies (including docs)
-        run: |
+          uv python install 3.12
           uv sync --group docs
 
       - name: Build Sphinx docs
         run: |
-          sphinx-build -b html docs docs/_build/html
+          uv run sphinx-build -b html docs docs/_build/html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
