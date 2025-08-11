@@ -1,7 +1,7 @@
 User Guide
 ==========
 
-This section provides practical guides and tips for using Microbiome-ML in your research.
+This section provides practical guides and tips for using microfactual in your research.
 
 Typical Workflow
 ----------------
@@ -15,16 +15,16 @@ Example: Full Pipeline
 
 .. code-block:: bash
 
-    microbiome-ml --abundance data/abundance.txt --metadata data/metadata.txt --output_dir results/
+    microfactual --abundance data/abundance.txt --metadata data/metadata.txt --output_dir results/
 
 Example: Custom Python Workflow
 -------------------------------
 
 .. code-block:: python
 
-    from microbiome_ml.data_processing import load_data, filter_data, clr_transform
-    from microbiome_ml.modeling import train_model
-    from microbiome_ml.visualisation import plot_roc
+    from microfactual.data_processing import load_data, filter_data, clr_transform
+    from microfactual.modeling import train_model
+    from microfactual.visualisation import plot_roc
 
     abundance, labels = load_data('abundance.txt', 'metadata.txt')
     filtered = filter_data(abundance)

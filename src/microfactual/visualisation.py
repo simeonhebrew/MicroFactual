@@ -1,4 +1,4 @@
-"""Visualization utilities for microbiome-ml."""
+"""Visualization utilities for microfactual."""
 
 import logging
 import os
@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import roc_auc_score, roc_curve
 
-from microbiome_ml.utils import get_logger
+from microfactual.utils import get_logger
 
 app_logger = get_logger(__name__)
 
@@ -73,4 +73,5 @@ def save_roc_curve(
     if logger is None:
         logger = get_logger(__name__)
     plot_roc(labels, probs, save_path=output_dir, show=False)
-    logger.info(f"ROC curve saved to {os.path.join(output_dir, 'roc_curve.png')}")
+    logger.info(
+        f"ROC curve saved to {os.path.join(output_dir, 'roc_curve.png')}")

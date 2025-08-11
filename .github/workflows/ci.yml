@@ -29,11 +29,11 @@ jobs:
 
       - name: Lint with ruff
         run: |
-          ruff check src/microbiome_ml 
+          ruff check src/microfactual 
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=src/microbiome_ml --cov-report=term-missing
+          pytest --cov=src/microfactual --cov-report=term-missing
 
     #   - name: Build package (optional)
     #     run: |

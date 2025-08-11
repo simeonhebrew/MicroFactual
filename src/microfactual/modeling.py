@@ -1,4 +1,4 @@
-"""Model training utilities for microbiome-ml.
+"""Model training utilities for microfactual.
 
 This module provides functions for training machine learning models (e.g., Random Forest)
 on microbiome datasets with cross-validation and hyperparameter tuning.
@@ -47,7 +47,8 @@ def train_model(
         Fitted GridSearchCV object with the best model.
 
     """
-    param_grid = {"max_features": np.unique(np.linspace(1, X.shape[1], 5, dtype=int))}
+    param_grid = {"max_features": np.unique(
+        np.linspace(1, X.shape[1], 5, dtype=int))}
     rf = RandomForestClassifier(n_estimators=n_estimators, random_state=42)
     cv = RepeatedKFold(n_splits=cv_splits, n_repeats=2, random_state=42)
 

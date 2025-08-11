@@ -1,15 +1,17 @@
 [project]
-name = "microbiome-ml"
+name = "microfactual"
 version = "0.1.0"
 description = "A user-friendly Python framework for microbiome machine learning workflows"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "Lawrence Adu-Gyamfi", email = "your.email@example.com"}
+    {name = "Simeon Hebrew", email = "simeonhebrew@gmail.com"},
+    {name = "Lawrence Adu-Gyamfi", email = "lagyamfi@outlook.com"}
 ]
 maintainers = [
-    {name = "Lawrence Adu-Gyamfi", email = "your.email@example.com"}
+    {name = "Simeon Hebrew", email = "simeonhebrew@gmail.com"},
+    {name = "Lawrence Adu-Gyamfi", email = "lagyamfi@outlook.com"}
 ]
 keywords = [
     "microbiome",
@@ -50,12 +52,17 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.2.1",
 ]
+docs = [
+    "sphinx>=8.1.3",
+    "sphinx-autodoc-typehints>=3.0.1",
+    "sphinx-rtd-theme>=3.0.2",
+]
 
 [project.scripts]
-microbiome-ml = "microbiome_ml.main:main"
+microfactual = "microfactual.main:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/microbiome_ml"]
+packages = ["src/microfactual"]
 
 [build-system]
 requires = ["hatchling"]

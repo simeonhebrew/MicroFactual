@@ -1,8 +1,8 @@
 # %%
 from sklearn.model_selection import train_test_split
-from microbiome_ml.data_processing import load_data, filter_data, clr_transform
-from microbiome_ml.modeling import train_model
-from microbiome_ml.visualisation import plot_roc
+from microfactual.data_processing import load_data, filter_data, clr_transform
+from microfactual.modeling import train_model
+from microfactual.visualisation import plot_roc
 
 
 # %%

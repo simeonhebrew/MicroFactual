@@ -1,9 +1,9 @@
-from microbiome_ml.utils import parse_args
+from microfactual.utils import parse_args
 
 
 def test_parse_args(monkeypatch):
     test_args = [
-        "microbiome-ml",
+        "microfactual",
         "--abundance",
         "abundance.txt",
         "--metadata",

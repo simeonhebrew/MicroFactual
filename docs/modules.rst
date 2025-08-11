@@ -1,4 +1,4 @@
-Microbiome-ML Documentation
+Microfactual Documentation
 ===========================
 
 .. toctree::
@@ -7,13 +7,13 @@ Microbiome-ML Documentation
 
    modules
 
-Microbiome-ML API Reference
+Microfactual API Reference
 ===========================
 
 Data Processing
 ---------------
 
-.. automodule:: microbiome_ml.data_processing
+.. automodule:: microfactual.data_processing
     :members:
     :undoc-members:
     :show-inheritance:
@@ -22,7 +22,7 @@ Data Processing
 Modeling
 --------
 
-.. automodule:: microbiome_ml.modeling
+.. automodule:: microfactual.modeling
     :members:
     :undoc-members:
     :show-inheritance:
@@ -30,7 +30,7 @@ Modeling
 Utilities
 ---------
 
-.. automodule:: microbiome_ml.utils
+.. automodule:: microfactual.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -38,7 +38,7 @@ Utilities
 Visualization
 -------------
 
-.. automodule:: microbiome_ml.visualisation
+.. automodule:: microfactual.visualisation
     :members:
     :undoc-members:
     :show-inheritance:
@@ -46,7 +46,7 @@ Visualization
 Main CLI
 --------
 
-.. automodule:: microbiome_ml.main
+.. automodule:: microfactual.main
     :members:
     :undoc-members:
     :show-inheritance:

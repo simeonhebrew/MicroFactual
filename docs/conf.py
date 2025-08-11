@@ -5,9 +5,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-project = "microbiome-ml"
-copyright = "2025, Lawrence Adu-Gyamfi"
-author = "Lawrence Adu-Gyamfi"
+project = "microfactual"
+copyright = "2025, Simeon Hebrew, Lawrence Adu-Gyamfi"
+author = "Simeon Hebrew, Lawrence Adu-Gyamfi"
 release = "0.1.0"
 
 extensions = [
