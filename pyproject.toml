@@ -37,8 +37,8 @@ classifiers = [
 
 dependencies = [
     "dice-ml>=0.9",
+    "explainerdashboard>=0.5.1",
     "matplotlib>=3.10.1",
-    "numpy>=2.2.4",
     "pandas>=2.2.3",
     "ruff>=0.11.6",
     "scikit-learn>=1.6.1",
