@@ -18,11 +18,15 @@ A user-friendly Python framework for microbiome machine learning workflows.
 Pipeline Overview
 -----------------
 
-.. figure:: pipeline_overview.png
-   :alt: Pipeline Overview
-   :align: center
+.. mermaid::
 
-   *A typical workflow: data loading → filtering → CLR transform → modeling → results.*
+    flowchart TD
+        A[Input Data] -->|Load| B(Dataset)
+        B -->|Filter| C[Preprocessing]
+        C -->|Transform| D[CLR/Scaling]
+        D -->|Train| E[Random Forest]
+        E -->|Explain| F[Counterfactuals]
+        E -->|Visualize| G[ROC Curves / Feature Importance]
 
 Quickstart
 ----------
@@ -30,19 +34,31 @@ Quickstart
 .. code-block:: bash
 
     pip install microfactual
-    microfactual --abundance path/to/abundance.txt --metadata path/to/metadata.txt --output_dir results/
 
-Or use as a library:
+    # Run the pipeline via CLI
+    microfactual --abundance data/abundance.txt --metadata data/metadata.txt --output_dir results/
+
+Usage as a library:
 
 .. code-block:: python
 
-    from microfactual.data_processing import load_data, filter_data, clr_transform
-    from microfactual.modeling import train_model
+    from microfactual.core.dataset import load_dataset
+    from microfactual.preprocessing import filter_features, clr_transformation
+    from microfactual.models import RandomForestClassifier
+    from microfactual.explainability import CounterfactualExplainer
 
-    abundance, labels = load_data('abundance.txt', 'metadata.txt')
-    filtered = filter_data(abundance)
-    clr = clr_transform(filtered)
-    model = train_model(clr, labels)
+    # Load and process
+    data = load_dataset('abundance.txt', 'metadata.txt')
+    filtered_data = filter_features(data)
+    transformed_data = clr_transformation(filtered_data)
+
+    # Train
+    model = RandomForestClassifier()
+    model.fit(transformed_data, labels)
+
+    # Explain
+    explainer = CounterfactualExplainer(model)
+    explanation = explainer.explain(instance)
 
 Contents
 --------
@@ -51,7 +67,6 @@ Contents
    :maxdepth=2
    :caption: Contents:
 
-   user_guide
    modules
 
 API Reference
