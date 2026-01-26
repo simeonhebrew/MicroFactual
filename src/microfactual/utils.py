@@ -34,8 +34,7 @@ def get_logger(name: str) -> logging.Logger:
     c_handler.setLevel(logging.INFO)
 
     # Create formatters and add them to the handlers
-    c_format = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    c_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     c_handler.setFormatter(c_format)
 
     # Add the handler to the logger
@@ -118,8 +117,7 @@ def save_probabilities(
     """
     if logger is None:
         logger = get_logger(__name__)
-    probs_df = pd.DataFrame(probs, index=clr_data.index,
-                            columns=["Probabilities"])
+    probs_df = pd.DataFrame(probs, index=clr_data.index, columns=["Probabilities"])
     probs_file_path = os.path.join(output_dir, "predicted_probabilities.csv")
     probs_df.to_csv(probs_file_path, index=True)
     logger.info(f"Predicted probabilities saved to {probs_file_path}")

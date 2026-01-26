@@ -56,7 +56,7 @@ MIN_ABUNDANCE_CUTOFF = 1e-6
 ```python
 # Good: Single responsibility, clear interface
 def filter_by_abundance(
-    data: pd.DataFrame, 
+    data: pd.DataFrame,
     threshold: float = 1e-6
 ) -> pd.DataFrame:
     """Filter features by minimum abundance threshold."""
@@ -91,23 +91,23 @@ def clr_transform(data: pd.DataFrame) -> pd.DataFrame:
 # Use pytest with clear test organization
 class TestCLRTransform:
     """Test suite for CLR transformation."""
-    
+
     def test_clr_transform_basic_functionality(self):
         """Test CLR transform produces expected output."""
         # Arrange
         data = create_test_abundance_data()
         expected = calculate_expected_clr(data)
-        
+
         # Act
         result = clr_transform(data)
-        
+
         # Assert
         np.testing.assert_array_almost_equal(result, expected)
-    
+
     def test_clr_transform_handles_zeros(self):
         """Test CLR transform handles zero values correctly."""
         # Test specific edge cases
-        
+
     @pytest.mark.parametrize("n_samples,n_features", [(10, 50), (100, 200)])
     def test_clr_transform_different_sizes(self, n_samples, n_features):
         """Test CLR transform works with different data sizes."""
@@ -148,11 +148,11 @@ def train_microbiome_classifier(
     **kwargs
 ) -> Tuple[BaseEstimator, Dict[str, float]]:
     """Train a microbiome classification model with cross-validation.
-    
+
     This function trains a machine learning model on microbiome abundance
     data and evaluates it using stratified cross-validation to ensure
     robust performance estimates.
-    
+
     Parameters
     ----------
     X : pd.DataFrame
@@ -166,34 +166,34 @@ def train_microbiome_classifier(
         Number of cross-validation folds for evaluation.
     **kwargs
         Additional parameters passed to the model constructor.
-    
+
     Returns
     -------
     model : BaseEstimator
         Trained scikit-learn compatible model.
     scores : Dict[str, float]
         Cross-validation scores including accuracy, precision, recall, f1.
-    
+
     Raises
     ------
     MicrobiomeDataError
         If X and y have mismatched indices or insufficient samples.
     ValueError
         If model_type is not supported.
-    
+
     Examples
     --------
     >>> abundance = load_abundance_data("data.tsv")
     >>> labels = load_labels("metadata.tsv")
     >>> model, scores = train_microbiome_classifier(abundance, labels)
     >>> print(f"Cross-validation accuracy: {scores['accuracy']:.3f}")
-    
+
     Notes
     -----
     This function assumes the input data has been appropriately preprocessed
     for microbiome analysis (e.g., filtered for prevalence and abundance,
     transformed using CLR or similar compositional data transformation).
-    
+
     See Also
     --------
     preprocess_microbiome_data : Recommended preprocessing pipeline
@@ -208,7 +208,7 @@ def train_microbiome_classifier(
 # Follow the established base classes
 class MicrobiomeRandomForest(MicrobiomeClassifier):
     """Random Forest classifier optimized for microbiome data."""
-    
+
     def __init__(
         self,
         n_estimators: int = 100,
@@ -220,7 +220,7 @@ class MicrobiomeRandomForest(MicrobiomeClassifier):
         self.n_estimators = n_estimators
         self.feature_selection = feature_selection
         self.sklearn_params = sklearn_params
-    
+
     def _create_base_estimator(self) -> RandomForestClassifier:
         """Create the underlying sklearn estimator."""
         return RandomForestClassifier(
@@ -241,13 +241,13 @@ def analyze_differential_abundance(
     # Access components through the dataset interface
     abundance = dataset.abundance_matrix
     metadata = dataset.sample_metadata
-    
+
     # Validate that comparison column exists
     if comparison_column not in metadata.columns:
         raise MicrobiomeDataError(
             f"Comparison column '{comparison_column}' not found in metadata"
         )
-    
+
     # ... analysis logic
 ```
 
@@ -267,11 +267,11 @@ def process_samples_in_batches(
 # Lazy loading for large files
 class LazyMicrobiomeDataset(MicrobiomeDataset):
     """Dataset that loads data on demand."""
-    
+
     def __init__(self, file_path: str):
         self.file_path = file_path
         self._abundance_matrix = None
-    
+
     @property
     def abundance_matrix(self) -> pd.DataFrame:
         if self._abundance_matrix is None:
@@ -351,7 +351,7 @@ repos:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
-  
+
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.0
     hooks:

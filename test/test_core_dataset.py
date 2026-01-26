@@ -4,10 +4,8 @@ Following TDD approach: write tests first, then implementation.
 Tests are domain-focused and simple.
 """
 
-import pytest
 import pandas as pd
-import numpy as np
-
+import pytest
 
 # === Fixtures ===
 
@@ -108,7 +106,7 @@ class TestSklearnCompatibility:
         ]
 
     def test_y_is_encoded_labels(self, sample_abundance, sample_metadata):
-        """y property returns encoded target vector."""
+        """Y property returns encoded target vector."""
         from microfactual.core.dataset import MicrobiomeDataset
 
         dataset = MicrobiomeDataset(
@@ -123,13 +121,12 @@ class TestSklearnCompatibility:
         # Should be numeric codes (0 or 1 for binary)
         assert set(y.unique()).issubset({0, 1})
 
-    def test_works_with_sklearn_cross_validate(
-        self, sample_abundance, sample_metadata
-    ):
+    def test_works_with_sklearn_cross_validate(self, sample_abundance, sample_metadata):
         """Dataset X, y work directly with sklearn."""
-        from microfactual.core.dataset import MicrobiomeDataset
         from sklearn.ensemble import RandomForestClassifier
         from sklearn.model_selection import cross_val_score
+
+        from microfactual.core.dataset import MicrobiomeDataset
 
         dataset = MicrobiomeDataset(
             abundance=sample_abundance,

@@ -2,8 +2,8 @@
 
 from microfactual.preprocessing.transforms import (
     AbundanceFilter,
-    PrevalenceFilter,
     CLRTransform,
+    PrevalenceFilter,
 )
 
 __all__ = ["AbundanceFilter", "PrevalenceFilter", "CLRTransform"]

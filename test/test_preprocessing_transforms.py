@@ -4,11 +4,10 @@ Following TDD approach: write tests first, then implementation.
 These transforms should work with sklearn.Pipeline.
 """
 
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
 from sklearn.pipeline import Pipeline
-
 
 # === Fixtures ===
 
@@ -136,8 +135,8 @@ class TestPreprocessingPipeline:
         """Full filter -> CLR pipeline works."""
         from microfactual.preprocessing.transforms import (
             AbundanceFilter,
-            PrevalenceFilter,
             CLRTransform,
+            PrevalenceFilter,
         )
 
         pipe = Pipeline(

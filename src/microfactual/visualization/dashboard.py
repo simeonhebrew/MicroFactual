@@ -1,8 +1,8 @@
 """Wrapper for ExplainerDashboard integration."""
 
+from typing import Any
+
 import pandas as pd
-import warnings
-from typing import Any, Optional
 
 try:
     from explainerdashboard import ClassifierExplainer, ExplainerDashboard
@@ -12,14 +12,10 @@ except ImportError:
 
 
 def launch_dashboard(
-    model: Any,
-    X: pd.DataFrame,
-    y: pd.Series | Any,
-    run: bool = True,
-    **kwargs
+    model: Any, X: pd.DataFrame, y: pd.Series | Any, run: bool = True, **kwargs
 ) -> Any:
     """Launch ExplainerDashboard for a trained model.
-    
+
     Parameters
     ----------
     model : Any
@@ -32,11 +28,12 @@ def launch_dashboard(
         Whether to start the dashboard server immediately.
     **kwargs
         Additional arguments passed to ExplainerDashboard.run().
-        
+
     Returns
     -------
     ExplainerDashboard
         The dashboard instance.
+
     """
     if ClassifierExplainer is None:
         raise ImportError(
@@ -51,14 +48,14 @@ def launch_dashboard(
         X.columns = X.columns.str.replace(r"[.{}]", "_", regex=True)
 
     # Create explainer
-    # If using MicrobiomeClassifier, we can pass it directly 
+    # If using MicrobiomeClassifier, we can pass it directly
     # as it behaves like an sklearn estimator
     explainer = ClassifierExplainer(model, X, y)
-    
+
     # Create dashboard
     db = ExplainerDashboard(explainer, header_hide_selector=True)
-    
+
     if run:
         db.run(**kwargs)
-        
+
     return db

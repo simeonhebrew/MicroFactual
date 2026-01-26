@@ -3,10 +3,9 @@
 Following TDD approach: tests first, then implementation.
 """
 
-import pytest
-import pandas as pd
 import numpy as np
-
+import pandas as pd
+import pytest
 
 # === Fixtures ===
 
@@ -80,8 +79,9 @@ class TestMicrobiomeClassifier:
 
     def test_is_sklearn_compatible(self, sample_X, sample_y):
         """Works with sklearn cross_val_score."""
-        from microfactual.models.classifiers import MicrobiomeClassifier
         from sklearn.model_selection import cross_val_score
+
+        from microfactual.models.classifiers import MicrobiomeClassifier
 
         clf = MicrobiomeClassifier(preprocessing=None)
         # With only 4 samples, use 2-fold CV
@@ -137,11 +137,19 @@ class TestHighLevelAPI:
         """classify() returns a fitted model."""
         # Create temp files
         abundance = pd.DataFrame(
-            {"S1": [0.1, 0.9], "S2": [0.2, 0.8]},
+            {
+                "S1": [0.1, 0.9],
+                "S2": [0.2, 0.8],
+                "S3": [0.15, 0.85],
+                "S4": [0.25, 0.75],
+            },
             index=["Bacteroides", "Firmicutes"],
         )
         metadata = pd.DataFrame(
-            {"Sample ID": ["S1", "S2"], "disease": ["healthy", "CRC"]}
+            {
+                "Sample ID": ["S1", "S2", "S3", "S4"],
+                "disease": ["healthy", "CRC", "healthy", "CRC"],
+            }
         )
 
         abundance_file = tmp_path / "abundance.tsv"
@@ -163,4 +171,4 @@ class TestHighLevelAPI:
         # Can make predictions
         X = abundance.T
         predictions = model.predict(X)
-        assert len(predictions) == 2
+        assert len(predictions) == 4

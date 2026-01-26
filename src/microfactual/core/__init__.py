@@ -1,6 +1,6 @@
 """Core data structures and base classes for microfactual."""
 
-from .dataset import MicrobiomeDataset
 from .base import BaseModel
+from .dataset import MicrobiomeDataset
 
 __all__ = ["MicrobiomeDataset", "BaseModel"]

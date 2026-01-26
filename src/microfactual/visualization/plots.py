@@ -3,16 +3,17 @@
 All plot functions return matplotlib Figure objects for flexibility.
 """
 
+from collections.abc import Sequence
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.metrics import (
+    ConfusionMatrixDisplay,
     confusion_matrix,
     roc_auc_score,
     roc_curve,
-    ConfusionMatrixDisplay,
 )
-from typing import Sequence
 
 
 def plot_roc(
@@ -40,6 +41,7 @@ def plot_roc(
     --------
     >>> fig = plot_roc(y_test, model.predict_proba(X_test)[:, 1])
     >>> fig.savefig("roc.png")
+
     """
     fpr, tpr, _ = roc_curve(y_true, y_proba)
     roc_auc = roc_auc_score(y_true, y_proba)
@@ -88,6 +90,7 @@ def plot_confusion_matrix(
     Examples
     --------
     >>> fig = plot_confusion_matrix(y_test, y_pred, labels=["Healthy", "Disease"])
+
     """
     cm = confusion_matrix(y_true, y_pred)
 
@@ -130,6 +133,7 @@ def plot_feature_importance(
     --------
     >>> fig = plot_feature_importance(model.feature_importances_, feature_names)
     >>> fig = plot_feature_importance(importance_series, top_n=20)
+
     """
     # Handle different input types
     if hasattr(importance, "feature_importances_"):

@@ -204,7 +204,7 @@ Modular preprocessing components that can be chained:
 
 ```python
 from microfactual.preprocessing import (
-    AbundanceFilter, PrevalenceFilter, CLRTransform, 
+    AbundanceFilter, PrevalenceFilter, CLRTransform,
     VarianceFilter, LogTransform
 )
 from sklearn.pipeline import Pipeline
@@ -258,7 +258,7 @@ import microfactual as mf
 # One-liner for classification
 results = mf.classify(
     abundance_file="abundance.tsv",
-    metadata_file="metadata.tsv", 
+    metadata_file="metadata.tsv",
     target_column="disease_status",
     model="random_forest",
     output_dir="results/"
@@ -284,7 +284,7 @@ Interpretation methods tailored for microbiome data:
 
 ```python
 from microfactual.explainability import (
-    MicroFactualCounterfactuals, 
+    MicroFactualCounterfactuals,
     TaxonomicImportance,
     BiomarkerDiscovery
 )

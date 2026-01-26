@@ -2,6 +2,7 @@
 
 Use microfactual.visualization (with 'z') instead.
 """
+
 import warnings
 
 warnings.warn(
@@ -84,5 +85,4 @@ def save_roc_curve(
     if logger is None:
         logger = get_logger(__name__)
     plot_roc(labels, probs, save_path=output_dir, show=False)
-    logger.info(
-        f"ROC curve saved to {os.path.join(output_dir, 'roc_curve.png')}")
+    logger.info(f"ROC curve saved to {os.path.join(output_dir, 'roc_curve.png')}")

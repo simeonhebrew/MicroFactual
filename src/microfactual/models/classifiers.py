@@ -4,7 +4,6 @@ The MicrobiomeClassifier provides a batteries-included approach to
 microbiome classification with sensible defaults for preprocessing.
 """
 
-import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.ensemble import RandomForestClassifier
@@ -18,12 +17,17 @@ from microfactual.preprocessing.transforms import (
 )
 
 
-class MicrobiomeClassifier(BaseEstimator, ClassifierMixin):
+class MicrobiomeClassifier(ClassifierMixin, BaseEstimator):
     """Classifier with built-in microbiome preprocessing.
 
     This provides a simple interface for microbiome classification with
     sensible defaults. It wraps sklearn classifiers with optional
     preprocessing steps.
+
+    Attributes
+    ----------
+    _estimator_type : str
+        Type of estimator, set to "classifier" for sklearn compatibility.
 
     Parameters
     ----------
@@ -43,7 +47,10 @@ class MicrobiomeClassifier(BaseEstimator, ClassifierMixin):
     >>> clf = MicrobiomeClassifier()
     >>> clf.fit(X, y)
     >>> predictions = clf.predict(X_test)
+
     """
+
+    _estimator_type = "classifier"
 
     ALGORITHMS = {
         "random_forest": RandomForestClassifier,
@@ -73,6 +80,7 @@ class MicrobiomeClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         self
+
         """
         # Build pipeline steps
         steps = []
@@ -128,7 +136,11 @@ class MicrobiomeClassifier(BaseEstimator, ClassifierMixin):
         -------
         y_pred : np.ndarray
             Predicted class labels.
+
         """
+        # Convert to numpy to avoid feature name mismatch errors
+        if isinstance(X, pd.DataFrame):
+            X = X.values
         return self.pipeline_.predict(X)
 
     def predict_proba(self, X):
@@ -143,7 +155,11 @@ class MicrobiomeClassifier(BaseEstimator, ClassifierMixin):
         -------
         proba : np.ndarray
             Probability for each class, shape (n_samples, n_classes).
+
         """
+        # Convert to numpy to avoid feature name mismatch errors
+        if isinstance(X, pd.DataFrame):
+            X = X.values
         return self.pipeline_.predict_proba(X)
 
     @property

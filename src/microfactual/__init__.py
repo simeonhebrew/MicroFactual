@@ -8,27 +8,28 @@ from sklearn.model_selection import cross_validate
 # Core data structures and interfaces
 from .core import BaseModel, MicrobiomeDataset
 
-# New architecture components
-from .models.classifiers import MicrobiomeClassifier
-from .preprocessing.transforms import AbundanceFilter, CLRTransform, PrevalenceFilter
-
 # Keep existing functions available for backward compatibility
 from .data_processing import clr_transform, filter_data, load_data
-from .main import main
-from .main import run_pipeline as _run_pipeline_internal
-from .modeling import train_model
-from .utils import get_logger, parse_args, save_results
-from .visualisation import plot_roc, save_roc_curve
-
-# New visualization module
-from .visualization import (
-    plot_confusion_matrix,
-    plot_feature_importance,
-    launch_dashboard,
-)
 
 # New explainability module
 from .explainability import BaseExplainer, DiCEExplainer
+from .main import main
+from .main import run_pipeline as _run_pipeline_internal
+from .modeling import train_model
+
+# New architecture components
+from .models.classifiers import MicrobiomeClassifier
+from .preprocessing.transforms import AbundanceFilter, CLRTransform, PrevalenceFilter
+from .utils import get_logger, parse_args, save_results
+from .visualisation import save_roc_curve
+
+# New visualization module
+from .visualization import (
+    launch_dashboard,
+    plot_confusion_matrix,
+    plot_feature_importance,
+    plot_roc,
+)
 
 
 def run_pipeline(*args, **kwargs):
@@ -83,11 +84,10 @@ def classify(
     --------
     >>> import microfactual as mf
     >>> results = mf.classify(
-    ...     "data/abundance.tsv",
-    ...     "data/metadata.tsv",
-    ...     target_column="disease"
+    ...     "data/abundance.tsv", "data/metadata.tsv", target_column="disease"
     ... )
     >>> print(f"CV Accuracy: {results['cv_scores']['test_accuracy']:.3f}")
+
     """
     # Load data using MicrobiomeDataset
     dataset = MicrobiomeDataset.from_files(
@@ -115,8 +115,19 @@ def classify(
 
     # Save if output_dir specified
     if output_dir:
-        save_results(output_dir, dataset.X, model.predict_proba(dataset.X)[:, 1], dataset.y, get_logger(__name__))
-        save_roc_curve(output_dir, dataset.y, model.predict_proba(dataset.X)[:, 1], get_logger(__name__))
+        save_results(
+            output_dir,
+            dataset.X,
+            model.predict_proba(dataset.X)[:, 1],
+            dataset.y,
+            get_logger(__name__),
+        )
+        save_roc_curve(
+            output_dir,
+            dataset.y,
+            model.predict_proba(dataset.X)[:, 1],
+            get_logger(__name__),
+        )
 
     return {
         "model": model,
