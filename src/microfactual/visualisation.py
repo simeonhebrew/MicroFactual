@@ -1,4 +1,15 @@
-"""Visualization utilities for microfactual."""
+"""[DEPRECATED] Visualization utilities.
+
+Use microfactual.visualization (with 'z') instead.
+"""
+import warnings
+
+warnings.warn(
+    "The 'microfactual.visualisation' module is deprecated and will be removed in v1.0. "
+    "Please use 'microfactual.visualization' (with 'z') instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 import logging
 import os

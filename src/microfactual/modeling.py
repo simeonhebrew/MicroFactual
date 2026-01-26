@@ -1,8 +1,15 @@
-"""Model training utilities for microfactual.
+"""[DEPRECATED] Model training utilities.
 
-This module provides functions for training machine learning models (e.g., Random Forest)
-on microbiome datasets with cross-validation and hyperparameter tuning.
+Use microfactual.models.classifiers.MicrobiomeClassifier instead.
 """
+import warnings
+
+warnings.warn(
+    "The 'microfactual.modeling' module is deprecated and will be removed in v1.0. "
+    "Please use 'microfactual.models.classifiers.MicrobiomeClassifier' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
