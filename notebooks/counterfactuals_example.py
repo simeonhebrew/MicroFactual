@@ -1,7 +1,8 @@
 # %%
 import dice_ml
 from sklearn.model_selection import train_test_split
-from microfactual.data_processing import load_data, filter_data, clr_transform
+
+from microfactual.data_processing import clr_transform, filter_data, load_data
 from microfactual.modeling import train_model
 
 # %%

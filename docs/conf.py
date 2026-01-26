@@ -15,6 +15,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
     "sphinx_autodoc_typehints",
+    "sphinxcontrib.mermaid",
 ]
 
 autosummary_generate = True

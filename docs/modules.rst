@@ -10,27 +10,64 @@ Microfactual Documentation
 Microfactual API Reference
 ===========================
 
-Data Processing
----------------
+Core
+----
 
-.. automodule:: microfactual.data_processing
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :exclude-members: _private_function
-
-Modeling
---------
-
-.. automodule:: microfactual.modeling
+.. automodule:: microfactual.core
     :members:
     :undoc-members:
     :show-inheritance:
 
-Utilities
----------
+.. automodule:: microfactual.core.dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
-.. automodule:: microfactual.utils
+Preprocessing
+-------------
+
+.. automodule:: microfactual.preprocessing
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.preprocessing.filtering
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.preprocessing.transformation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Models
+------
+
+.. automodule:: microfactual.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.models.classifiers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Explainability
+--------------
+
+.. automodule:: microfactual.explainability
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.explainability.base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.explainability.counterfactuals
     :members:
     :undoc-members:
     :show-inheritance:
@@ -38,15 +75,7 @@ Utilities
 Visualization
 -------------
 
-.. automodule:: microfactual.visualisation
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Main CLI
---------
-
-.. automodule:: microfactual.main
+.. automodule:: microfactual.visualization
     :members:
     :undoc-members:
     :show-inheritance:

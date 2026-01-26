@@ -1,6 +1,6 @@
 import pytest
 
-from microfactual.main import load_data, filter_data, clr_transform
+from microfactual.main import clr_transform, filter_data, load_data
 
 
 def test_load_data(mock_abundance, mock_metadata, tmp_path):
@@ -9,15 +9,13 @@ def test_load_data(mock_abundance, mock_metadata, tmp_path):
     mock_abundance.to_csv(abundance_path, sep="\t")
     mock_metadata.to_csv(metadata_path, sep="\t", index=False)
 
-    abundance, labels = load_data(
-        abundance_path, metadata_path, target_column="Group")
+    abundance, labels = load_data(abundance_path, metadata_path, target_column="Group")
     assert abundance.shape == (4, 4)
     assert len(labels) == 4
 
 
 def test_filter_data(mock_abundance):
-    filtered = filter_data(
-        mock_abundance, abundance_cutoff=0.1, prevalence_cutoff=0.5)
+    filtered = filter_data(mock_abundance, abundance_cutoff=0.1, prevalence_cutoff=0.5)
     assert filtered.shape[0] == 2  # Only 2 species pass the filters
 
 
@@ -48,8 +46,7 @@ def test_load_data_missing_column(tmp_path, mock_abundance, mock_metadata):
     from microfactual.data_processing import load_data
 
     with pytest.raises(Exception):
-        load_data(str(abundance_path), str(
-            metadata_path), target_column="Group")
+        load_data(str(abundance_path), str(metadata_path), target_column="Group")
 
 
 def test_load_data_file_not_found():
@@ -87,5 +84,4 @@ def test_load_data_invalid_target_column(tmp_path, mock_abundance, mock_metadata
     from microfactual.data_processing import load_data
 
     with pytest.raises(Exception):
-        load_data(str(abundance_path), str(
-            metadata_path), target_column="NotAColumn")
+        load_data(str(abundance_path), str(metadata_path), target_column="NotAColumn")

@@ -1,4 +1,16 @@
-"""Data processing utilities for microfactual."""
+"""[DEPRECATED] Data processing utilities.
+
+Use microfactual.core.dataset and microfactual.preprocessing instead.
+"""
+
+import warnings
+
+warnings.warn(
+    "The 'microfactual.data_processing' module is deprecated and will be removed in v1.0. "
+    "Please use 'microfactual.core.dataset' and 'microfactual.preprocessing' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 import numpy as np
 import pandas as pd
