@@ -1,95 +1,202 @@
 # MicroFactual
 
-MicroFactual is a user-friendly python framework for performing interpretable microbiome machine learning workflows based on counterfactual explanations.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/simeonhebrew/ML_Microbiome_Package/actions/workflows/ci.yml/badge.svg)](https://github.com/simeonhebrew/ML_Microbiome_Package/actions/workflows/ci.yml)
 
-## Recent Updates (June 2025)
+A Python framework for interpretable microbiome machine learning with sklearn-compatible APIs.
 
-- **Improved Flexibility**: Added support for configurable sample ID column names via the `--sample_column_name` parameter (default: "Sample ID")
-- **Code Standardization**: Improved code formatting and consistency across the codebase
+## Features
 
-### Features to implement
+- 🧬 **Microbiome-optimized preprocessing** — Abundance filtering, prevalence filtering, CLR transformation
+- 📊 **Rich Visualization** — ROC curves, Confusion Matrices, Feature Importance plots
+- 🧠 **Explainable AI** — Counterfactual explanations via DiCE integration
+- 🤖 **sklearn-compatible** — Works with `cross_val_score`, `Pipeline`, `GridSearchCV`
+- 📈 **One-liner API** — Run complete workflows in a single function call
+- 🔬 **Built for researchers** — Sensible defaults, minimal boilerplate
 
-- Allowing for the integration of linear and tree-based models
+## Architecture
 
-- Allowing for user parameter optimization at each workflow level
+```mermaid
+graph TB
+    subgraph "User-Facing Layer"
+        API["High-Level API<br/>mf.classify(), mf.explain()"]
+    end
 
-- Parallelization
+    subgraph "Core Abstractions"
+        Dataset["MicrobiomeDataset<br/>• X, y properties"]
+        Pipeline["Preprocessing<br/>sklearn Pipeline"]
+        Models["Models<br/>• MicrobiomeClassifier"]
+    end
 
+    subgraph "Interpretation Features"
+        Viz["Visualization<br/>• Plots & ROC"]
+        Explain["Explainability<br/>• Counterfactuals (DiCE)"]
+    end
 
-## Executing python version
+    API --> Dataset
+    Dataset --> Pipeline
+    Pipeline --> Models
+    Models --> Viz
+    Models --> Explain
 
-We use uv as the python package manager to create a virtual environment with the required dependencies.
-To install uv, see the following link:
-[https://docs.astral.sh/uv/#installation](https://docs.astral.sh/uv/#installation)
-
-### Installing the package
-To create a virtual environment with the required dependencies, run the following command in your terminal:
-```bash
-uv venv <env_name> --python <python_version>
+    style API fill:#e3f2fd
+    style Viz fill:#e8f5e9
+    style Explain fill:#fff3e0
 ```
-To activate the virtual environment, run the following command in your terminal:
+
+## Installation
+
 ```bash
-source <env_name>/bin/activate
-```
-Install the project to install all the dependencies as well as the package itself:
-```bash
+# Using uv (recommended)
 uv pip install -e .
+
+# Or using pip
+pip install -e .
 ```
 
-### Running the package
-To run the package, you can use the following command:
+Requires Python 3.10+
+
+## Quick Start
+
+### One-Line Classification
+
+```python
+import microfactual as mf
+
+results = mf.classify(
+    "data/abundance.tsv",
+    "data/metadata.tsv",
+    target_column="disease"
+)
+
+print(f"CV Accuracy: {results['cv_scores']['test_accuracy']:.3f}")
+```
+
+### sklearn-Compatible API
+
+```python
+from microfactual import MicrobiomeClassifier, MicrobiomeDataset
+from sklearn.model_selection import cross_val_score
+
+# Load data
+dataset = MicrobiomeDataset.from_files(
+    "data/abundance.tsv",
+    "data/metadata.tsv",
+    target_column="disease"
+)
+
+# Train classifier
+clf = MicrobiomeClassifier(algorithm="random_forest")
+scores = cross_val_score(clf, dataset.X, dataset.y, cv=5)
+```
+
+### Custom Preprocessing
+
+```python
+from microfactual import (
+    MicrobiomeClassifier,
+    AbundanceFilter,
+    PrevalenceFilter,
+    CLRTransform
+)
+
+clf = MicrobiomeClassifier(
+    algorithm="logistic",
+    preprocessing=[
+        AbundanceFilter(min_abundance=0.01),
+        PrevalenceFilter(min_prevalence=0.1),
+        CLRTransform()
+    ]
+)
+clf.fit(X, y)
+```
+
+## CLI Usage
+
 ```bash
-uv run microfactual --abundance <abundance_file> --metadata <metadata_file> --target <target_column> --output_dir <output_directory> --sample_column_name <sample_id_column>
+microfactual \
+    --abundance data/abundance.tsv \
+    --metadata data/metadata.tsv \
+    --target disease \
+    --output_dir results/
 ```
-Where:
-- `<abundance_file>`: Path to the abundance data file.
-- `<metadata_file>`: Path to the metadata file.
-- `<target_column>`: The target column for the model.
-- `<output_directory>`: Path to the output directory where results will be saved.
-- `<sample_id_column>`: (Optional) The column name for sample IDs in metadata (default: "Sample ID").
 
-### Using the Makefile
+## API Reference
 
-You can use the provided `Makefile` to simplify common tasks in the project. Below are the available targets:
+### High-Level
 
-- **Create a virtual environment**:
-  ```bash
-  make venv
-  ```
-  This will create a virtual environment using `uv` with the specified Python version.
+| Function | Description |
+|----------|-------------|
+| `mf.classify()` | One-liner classification pipeline |
 
-- **Activate the virtual environment**:
-  ```bash
-  make activate
-  ```
-  This will display instructions to activate the virtual environment manually.
+### Core Classes
 
-- **Install dependencies and the package**:
-  ```bash
-  make install
-  ```
-  This will install all dependencies and the package itself.
+| Class | Description |
+|-------|-------------|
+| `MicrobiomeDataset` | Data container with `X`, `y` properties |
+| `MicrobiomeClassifier` | Classifier with built-in preprocessing |
 
-- **Run the package**:
-  ```bash
-  make run
-  ```
-  This will execute the pipeline with default or specified parameters. You can customize the parameters by editing the `Makefile` or passing them as environment variables.
+### Preprocessing Transforms
 
-- **Run tests**:
-  ```bash
-  make test
-  ```
-  This will run the tests using `pytest`. Make sure to have the test files in the appropriate directory.
+All transforms are sklearn-compatible (`fit`/`transform`):
 
-- **Clean the output directory**:
-  ```bash
-  make clean
-  ```
-  This will remove the output directory and its contents.
+| Transform | Description |
+|-----------|-------------|
+| `AbundanceFilter` | Remove low-abundance features |
+| `PrevalenceFilter` | Remove rare features |
+| `CLRTransform` | Centered log-ratio transformation |
 
-- **Display help**:
-  ```bash
-  make help
-  ```
-  This will display a list of available targets and their descriptions.
+### Visualization
+
+| Function | Description |
+|----------|-------------|
+| `mf.plot_roc()` | Plot ROC curve with AUC score |
+| `mf.plot_confusion_matrix()` | Plot confusion matrix with labels |
+| `mf.plot_feature_importance()` | Plot top feature importances |
+| `mf.launch_dashboard()` | Launch interactive ExplainerDashboard |
+
+### Explainability
+
+| Class/Function | Description |
+|----------------|-------------|
+| `DiCEExplainer` | Generate counterfactual explanations |
+| `BaseExplainer` | Abstract base class for custom explainers |
+
+## Development
+
+```bash
+# Install dev dependencies
+uv pip install -e ".[dev]"
+
+# Run tests
+make test
+
+# Run linting
+ruff check src/
+```
+
+## Roadmap
+
+- [ ] XGBoost, SVM support
+- [ ] BIOM file format
+- [ ] XGBoost, SVM support
+- [ ] BIOM file format
+- [ ] SHAP integration
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+## Citation
+
+If you use MicroFactual in your research, please cite:
+
+```bibtex
+@software{microfactual,
+  title = {MicroFactual: Interpretable Microbiome ML},
+  author = {Hebrew, Simeon and Adu-Gyamfi, Lawrence},
+  year = {2025},
+  url = {https://github.com/simeonhebrew/ML_Microbiome_Package}
+}
+```
