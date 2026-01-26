@@ -79,4 +79,3 @@ Visualization
     :members:
     :undoc-members:
     :show-inheritance:
-
