@@ -67,6 +67,58 @@ class MicrobiomeClassifier(ClassifierMixin, BaseEstimator):
         self.preprocessing = preprocessing
         self.model_params = model_params
 
+    def get_params(self, deep: bool = True) -> dict:
+        """Get parameters for this estimator (sklearn-compatible).
+
+        Extends the default behaviour so that keyword arguments forwarded to the
+        underlying classifier (e.g. ``n_estimators``, ``max_depth``) are exposed
+        as top-level params. This makes the estimator usable with
+        ``sklearn.clone``, ``set_params`` and ``GridSearchCV`` over those params.
+
+        Parameters
+        ----------
+        deep : bool, default=True
+            Kept for sklearn API compatibility; has no nested effect here.
+
+        Returns
+        -------
+        dict
+            Parameter names mapped to their values, including forwarded
+            model params.
+
+        """
+        params = {
+            "algorithm": self.algorithm,
+            "preprocessing": self.preprocessing,
+        }
+        params.update(self.model_params)
+        return params
+
+    def set_params(self, **params) -> "MicrobiomeClassifier":
+        """Set the parameters of this estimator (sklearn-compatible).
+
+        Unknown parameters are treated as keyword arguments for the underlying
+        classifier rather than raising, mirroring the ``**model_params`` accepted
+        by ``__init__``.
+
+        Parameters
+        ----------
+        **params
+            Estimator parameters to set.
+
+        Returns
+        -------
+        MicrobiomeClassifier
+            self.
+
+        """
+        for key in ("algorithm", "preprocessing"):
+            if key in params:
+                setattr(self, key, params.pop(key))
+        # Remaining params are forwarded to the underlying classifier.
+        self.model_params = {**self.model_params, **params}
+        return self
+
     def fit(self, X, y):
         """Fit the classifier.
 
