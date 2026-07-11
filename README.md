@@ -52,14 +52,18 @@ graph TB
 ## Installation
 
 ```bash
-# Using uv (recommended)
-uv pip install -e .
-
-# Or using pip
+# Core install (lean — preprocessing, models, visualization)
 pip install -e .
+
+# With the interpretability stack (DiCE counterfactuals + ExplainerDashboard)
+pip install -e '.[explainability]'
+
+# Using uv (recommended)
+uv pip install -e '.[explainability]'
 ```
 
-Requires Python 3.10+
+Requires Python 3.10+. The `explainability` extra pulls in the heavier
+`dice-ml` and `explainerdashboard` dependencies; the core install stays lean.
 
 ## Quick Start
 
