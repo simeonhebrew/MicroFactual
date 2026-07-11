@@ -64,9 +64,10 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth=2
+   :maxdepth: 2
    :caption: Contents:
 
+   counterfactuals
    modules
 
 API Reference

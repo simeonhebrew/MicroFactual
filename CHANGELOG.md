@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrote the README roadmap (removed duplicated entries) around the v0.2.0 release plan.
 
 ### Added
+- **`mf.explain_counterfactual()`**: first-class, documented one-call entry point for per-sample counterfactual explanations (wraps `DiCEExplainer`). Exported at the top level.
+- Counterfactuals methodology documentation page (`docs/counterfactuals.rst`) covering assumptions, interpretation guidance, and limitations.
 - `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).
 - End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.
 

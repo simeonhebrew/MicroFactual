@@ -101,3 +101,53 @@ class TestDiCEExplainer:
 
             # Assert
             mock_exp_instance.generate_counterfactuals.assert_called_once()
+
+
+# === explain_counterfactual() convenience API ===
+
+
+class TestExplainCounterfactual:
+    """Test the top-level one-call counterfactual entry point."""
+
+    def test_wires_through_to_dice(self, sample_data, mock_model):
+        """explain_counterfactual builds an explainer and generates CFs."""
+        from microfactual.explainability.counterfactuals import explain_counterfactual
+
+        X, y = sample_data
+        query = X.iloc[[0]]
+
+        with patch("microfactual.explainability.counterfactuals.dice_ml") as mock_dice:
+            mock_exp_instance = MagicMock()
+            mock_dice.Dice.return_value = mock_exp_instance
+
+            explain_counterfactual(
+                model=mock_model,
+                query=query,
+                background_data=X,
+                y=y,
+                total_CFs=3,
+            )
+
+            mock_exp_instance.generate_counterfactuals.assert_called_once()
+            _, called_kwargs = mock_exp_instance.generate_counterfactuals.call_args
+            assert called_kwargs["total_CFs"] == 3
+            assert called_kwargs["desired_class"] == "opposite"
+
+    def test_raises_without_dice(self, sample_data, mock_model):
+        """A clear ImportError is raised when dice-ml is unavailable."""
+        from microfactual.explainability.counterfactuals import explain_counterfactual
+
+        X, y = sample_data
+
+        with patch("microfactual.explainability.counterfactuals.dice_ml", None):
+            with pytest.raises(ImportError, match="explainability"):
+                explain_counterfactual(
+                    model=mock_model, query=X.iloc[[0]], background_data=X, y=y
+                )
+
+    def test_exported_at_top_level(self):
+        """explain_counterfactual is part of the public API."""
+        import microfactual as mf
+
+        assert hasattr(mf, "explain_counterfactual")
+        assert "explain_counterfactual" in mf.__all__
