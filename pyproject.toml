@@ -1,7 +1,7 @@
 [project]
 name = "microfactual"
-version = "0.1.1"
-description = "A user-friendly Python framework for microbiome machine learning workflows"
+version = "0.2.0"
+description = "Interpretable, sklearn-native counterfactual explanations for microbiome classification"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -19,7 +19,9 @@ keywords = [
     "bioinformatics",
     "metagenomics",
     "classification",
-    "random-forest"
+    "counterfactual-explanations",
+    "explainable-ai",
+    "interpretability"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

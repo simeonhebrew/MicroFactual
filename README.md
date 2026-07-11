@@ -4,7 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/simeonhebrew/ML_Microbiome_Package/actions/workflows/ci.yml/badge.svg)](https://github.com/simeonhebrew/ML_Microbiome_Package/actions/workflows/ci.yml)
 
-A Python framework for interpretable microbiome machine learning with sklearn-compatible APIs.
+**Interpretable, sklearn-native counterfactual explanations for microbiome classification.**
+
+MicroFactual answers a question most microbiome ML tools can't: *"what minimal change in taxa abundance would flip this sample's prediction?"* It pairs per-sample counterfactual analysis with a clean sklearn-compatible surface (`Pipeline`, `GridSearchCV`, `cross_val_score`) over microbiome-aware preprocessing (abundance/prevalence filtering, CLR).
+
+**Non-goals:** not a replacement for QIIME2's bioinformatics pipeline, not a feature-engineering toolkit, not a diversity/phylogenetics library.
 
 ## Features
 
@@ -178,10 +182,11 @@ ruff check src/
 
 ## Roadmap
 
-- [ ] XGBoost, SVM support
-- [ ] BIOM file format
-- [ ] XGBoost, SVM support
-- [ ] BIOM file format
+- [ ] First-class `explain_counterfactual()` API and methodology docs
+- [ ] Additional classifiers (XGBoost, SVM)
+- [ ] Optional `[explainability]` extras to keep the core install lean
+- [ ] Real-dataset benchmark notebook (AUC/F1 vs. baseline)
+- [ ] BIOM file format support
 - [ ] SHAP integration
 
 ## License

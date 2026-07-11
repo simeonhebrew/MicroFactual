@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use MicroFactual in your research, please cite it as below."
+title: "MicroFactual: Interpretable, sklearn-native counterfactual explanations for microbiome classification"
+type: software
+version: 0.2.0
+license: MIT
+repository-code: "https://github.com/simeonhebrew/ML_Microbiome_Package"
+authors:
+  - family-names: Hebrew
+    given-names: Simeon
+    email: simeonhebrew@gmail.com
+  - family-names: Adu-Gyamfi
+    given-names: Lawrence
+    email: lagyamfi@outlook.com
+keywords:
+  - microbiome
+  - machine-learning
+  - counterfactual-explanations
+  - explainable-ai
+  - classification
+# TODO: replace with the paper preprint DOI once available.
+# preferred-citation:
+#   type: article
+#   title: "<paper title>"
+#   doi: "<preprint DOI>"
+#   year: <year>
+#   authors:
+#     - family-names: Hebrew
+#       given-names: Simeon
+#     - family-names: Adu-Gyamfi
+#       given-names: Lawrence
