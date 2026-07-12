@@ -12,19 +12,19 @@ MicroFactual answers a question most microbiome ML tools can't: *"what minimal c
 
 ## Features
 
+- 🧠 **Counterfactual explanations** — Sparse, validated, per-sample "what would flip this prediction?" with real taxon names, plausibility bounds, cohort ranking, and a class-reference heatmap
 - 🧬 **Microbiome-optimized preprocessing** — Abundance filtering, prevalence filtering, CLR transformation
-- 📊 **Rich Visualization** — ROC curves, Confusion Matrices, Feature Importance plots
-- 🧠 **Explainable AI** — Counterfactual explanations via DiCE integration
+- 🔎 **Data exploration** — Cutoff-diagnostic plots (`mf.explore`) to choose filters from the data
+- 📊 **Rich visualization** — ROC curves, confusion matrices, feature importance
 - 🤖 **sklearn-compatible** — Works with `cross_val_score`, `Pipeline`, `GridSearchCV`
-- 📈 **One-liner API** — Run complete workflows in a single function call
-- 🔬 **Built for researchers** — Sensible defaults, minimal boilerplate
+- 📈 **One-liner API** — Run a complete classification workflow in a single call
 
 ## Architecture
 
 ```mermaid
 graph TB
     subgraph "User-Facing Layer"
-        API["High-Level API<br/>mf.classify(), mf.explain()"]
+        API["High-Level API<br/>mf.explain_counterfactual(), mf.classify()"]
     end
 
     subgraph "Core Abstractions"
@@ -67,7 +67,60 @@ Requires Python 3.10+. The `explainability` extra pulls in the heavier
 
 ## Quick Start
 
-### One-Line Classification
+### Counterfactual explanations (the headline)
+
+*"What is the smallest change in taxa abundance that would flip this sample's
+prediction?"* — answered per sample, with the real taxon names.
+
+```python
+import microfactual as mf
+from microfactual import AbundanceFilter, PrevalenceFilter, CLRTransform
+
+# 1. Load a real feature table + metadata
+ds = mf.MicrobiomeDataset.from_files(
+    "abundance.tsv", "metadata.tsv",
+    target_column="Group", sample_column="Sample ID",
+)
+
+# 2. Preprocess into CLR space (real taxon names are preserved end-to-end)
+X = CLRTransform().fit_transform(
+    PrevalenceFilter(min_prevalence=0.1).fit_transform(
+        AbundanceFilter(min_abundance=1e-5).fit_transform(ds.X)))
+y = ds.y
+
+# 3. Fit an sklearn-compatible classifier in that space
+model = mf.MicrobiomeClassifier(preprocessing=None).fit(X, y)
+
+# 4. Explain one sample: what minimal change flips its prediction?
+cf = mf.explain_counterfactual(
+    model, X.iloc[[0]], background_data=X, y=y,
+    class_names=list(ds.target_names),
+)
+print(cf.summary())
+cf.changes(0)   # tidy table: taxon, original -> counterfactual, delta, direction
+```
+
+By default the result is **sparse** (a handful of taxa, not hundreds) and
+**validated** (each counterfactual really flips the prediction). Illustrative
+output on the shipped colorectal-cancer dataset:
+
+```text
+1 counterfactual(s) flipping CRC → Control; features changed: 7; validity=100%.
+
+                       feature  original  counterfactual  delta  direction
+   Bacteroides fragilis [1090]      5.98           -1.83  -7.81   decrease
+Methanosphaera stadtmanae [94]     -3.21            3.18   6.39   increase
+    Bacteroides caccae [1096]      -0.43            4.70   5.13   increase
+   ...                                                    (7 taxa total)
+```
+
+Go further: keep counterfactuals in-distribution with
+`mf.plausible_range(...)` + `permitted_range`, rank taxa across a cohort with
+`mf.counterfactual_importance(...)`, and visualize a counterfactual against the
+class references with `mf.plot_counterfactual_heatmap(...)`. See
+[`notebooks/00_End_to_End_Feature_Tour.ipynb`](notebooks/00_End_to_End_Feature_Tour.ipynb).
+
+### One-line classification
 
 ```python
 import microfactual as mf
@@ -136,6 +189,7 @@ microfactual \
 
 | Function | Description |
 |----------|-------------|
+| `mf.explain_counterfactual()` | Sparse, validated per-sample counterfactuals (returns a `CounterfactualResult`) |
 | `mf.classify()` | One-liner classification pipeline |
 
 ### Core Classes
@@ -155,6 +209,15 @@ All transforms are sklearn-compatible (`fit`/`transform`):
 | `PrevalenceFilter` | Remove rare features |
 | `CLRTransform` | Centered log-ratio transformation |
 
+### Data Exploration
+
+| Function | Description |
+|----------|-------------|
+| `mf.explore()` | Cutoff-diagnostics panel (abundance/prevalence histograms + joint scatter) |
+| `mf.plot_abundance_histogram()` | Per-taxon mean-abundance histogram (log scale) |
+| `mf.plot_prevalence_histogram()` | Per-taxon prevalence histogram |
+| `mf.plot_prevalence_abundance()` | Joint prevalence-vs-abundance scatter with cutoffs |
+
 ### Visualization
 
 | Function | Description |
@@ -162,14 +225,19 @@ All transforms are sklearn-compatible (`fit`/`transform`):
 | `mf.plot_roc()` | Plot ROC curve with AUC score |
 | `mf.plot_confusion_matrix()` | Plot confusion matrix with labels |
 | `mf.plot_feature_importance()` | Plot top feature importances |
+| `mf.plot_counterfactual_heatmap()` | Heatmap of a counterfactual vs class references |
 | `mf.launch_dashboard()` | Launch interactive ExplainerDashboard |
 
 ### Explainability
 
 | Class/Function | Description |
 |----------------|-------------|
-| `DiCEExplainer` | Generate counterfactual explanations |
-| `BaseExplainer` | Abstract base class for custom explainers |
+| `mf.explain_counterfactual()` | Sparse, validated counterfactuals → `CounterfactualResult` |
+| `mf.counterfactual_importance()` | Cohort-level taxon ranking by how often they must change |
+| `mf.plausible_range()` | Reference-class bounds for `permitted_range` (keeps CFs in-distribution) |
+| `mf.counterfactual_concordance()` | Score how well a counterfactual moves toward a reference class |
+| `CounterfactualResult` | `.changes()`, `.n_changes`, `.validity`, `.summary()` |
+| `DiCEExplainer` / `BaseExplainer` | Low-level DiCE adapter / abstract explainer base |
 
 ## Development
 
