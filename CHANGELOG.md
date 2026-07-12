@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrote the README roadmap (removed duplicated entries) around the v0.2.0 release plan.
 
 ### Added
+- **`mf.explore(dataset)`**: data-exploration panel for choosing preprocessing cutoffs — log-abundance histogram, prevalence histogram, and a joint prevalence-vs-abundance scatter, all overlaying the proposed `AbundanceFilter`/`PrevalenceFilter` cutoffs and reporting how many taxa are retained. Individual plotters (`plot_abundance_histogram`, `plot_prevalence_histogram`, `plot_prevalence_abundance`) are also exported.
 - **`mf.explain_counterfactual()`**: first-class, documented one-call entry point for per-sample counterfactual explanations (wraps `DiCEExplainer`). Exported at the top level.
 - Counterfactuals methodology documentation page (`docs/counterfactuals.rst`) covering assumptions, interpretation guidance, and limitations.
 - `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).

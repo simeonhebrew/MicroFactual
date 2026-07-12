@@ -102,6 +102,9 @@ ignore = [
 "src/microfactual/visualisation.py" = ["E402"]
 "src/microfactual/modeling.py" = ["E402"]
 "src/microfactual/data_processing.py" = ["E402"]
+# Tests: docstring coverage not required; matplotlib backend must be set
+# pre-import; broad `pytest.raises(Exception)` assertions are acceptable.
+"test/*.py" = ["D", "E402", "B017"]
 
 [tool.ruff.format]
 # Use ruff's built-in formatter for consistent code style
