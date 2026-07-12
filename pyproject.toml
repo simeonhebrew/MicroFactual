@@ -1,7 +1,7 @@
 [project]
 name = "microfactual"
-version = "0.1.1"
-description = "A user-friendly Python framework for microbiome machine learning workflows"
+version = "0.2.0"
+description = "Interpretable, sklearn-native counterfactual explanations for microbiome classification"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -19,7 +19,9 @@ keywords = [
     "bioinformatics",
     "metagenomics",
     "classification",
-    "random-forest"
+    "counterfactual-explanations",
+    "explainable-ai",
+    "interpretability"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -74,11 +76,27 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "W", "I", "N", "D", "UP", "B", "A", "C90"]
-ignore = ["E501", "N803"]
 exclude = [".git", ".venv", "env_microbiome", "output", "__pycache__", "build", "dist"]
-# Example: To ignore docstring rules in tests, uncomment below:
-# per-file-ignores = {"test/*.py" = ["D"]}
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "D", "UP", "B", "A", "C90"]
+ignore = [
+    "E501",  # line length handled by the formatter
+    # ML naming conventions: X (features) / y (targets) are standard.
+    "N803",
+    "N806",
+    "N802",
+    "D107",  # __init__ is documented via the class docstring
+    # Resolve mutually-exclusive pydocstyle rules (keep D211 + D212):
+    "D203",
+    "D213",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Deprecated shim modules intentionally emit a DeprecationWarning before imports.
+"src/microfactual/visualisation.py" = ["E402"]
+"src/microfactual/modeling.py" = ["E402"]
+"src/microfactual/data_processing.py" = ["E402"]
 
 [tool.ruff.format]
 # Use ruff's built-in formatter for consistent code style

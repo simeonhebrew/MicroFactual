@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- **Narrative reframing**: repositioned MicroFactual around interpretable, sklearn-native counterfactual explanations for microbiome classification. Updated package `description`, keywords, and README headline accordingly.
+- Rewrote the README roadmap (removed duplicated entries) around the v0.2.0 release plan.
+
+### Added
+- `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).
+
+### Fixed
+- Version metadata is now consistent: `pyproject.toml` bumped to `0.2.0` to match `microfactual.__version__`.
+- CI lint (`ruff check src/microfactual`) now passes: migrated ruff config to the `[tool.ruff.lint]` section, ignored ML naming conventions (`X`/`y`) and undocumented `__init__`, per-file-ignored `E402` in the deprecated shim modules, and documented the `y` parameter on transformer `fit` methods.
+
 ## [0.1.1] - 2026-01-26
 
 ### Fixed
