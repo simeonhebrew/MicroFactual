@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Counterfactual Explanations &mdash; MicroFactual 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Preprocessing: choosing filters and transforms" href="preprocessing.html" />
+    <link rel="prev" title="MicroFactual" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            MicroFactual
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Counterfactual Explanations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#actionable-sparse-counterfactuals">Actionable (sparse) counterfactuals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plausibility-keep-counterfactuals-in-distribution">Plausibility: keep counterfactuals in-distribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-a-counterfactual-against-class-references">Visualizing a counterfactual against class references</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cohort-level-counterfactual-importance">Cohort-level counterfactual importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methodology-assumptions">Methodology &amp; assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interpretation-guidance">Interpretation guidance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing: choosing filters and transforms</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Microfactual API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MicroFactual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Counterfactual Explanations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/counterfactuals.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="counterfactual-explanations">
+<h1>Counterfactual Explanations<a class="headerlink" href="#counterfactual-explanations" title="Link to this heading"></a></h1>
+<p>Counterfactual explanations are MicroFactual’s headline capability. For an
+individual sample they answer:</p>
+<blockquote>
+<div><p><em>“What is the smallest change in taxa abundance that would flip this
+sample’s predicted class?”</em></p>
+</div></blockquote>
+<p>Unlike global feature-importance scores, a counterfactual is <strong>per-sample and
+actionable</strong>: it names specific taxa and the direction/magnitude of change that
+would move the sample across the decision boundary. This maps naturally onto
+clinical and biological reasoning (“which microbes, and by how much?”).</p>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">microfactual</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mf</span>
+
+<span class="c1"># Fit a model in the feature space you want to explain (see note below).</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">MicrobiomeClassifier</span><span class="p">(</span><span class="n">preprocessing</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_clr</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># One call: what would flip the first sample&#39;s prediction?</span>
+<span class="n">cf</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">explain_counterfactual</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">query</span><span class="o">=</span><span class="n">X_clr</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span>
+    <span class="n">background_data</span><span class="o">=</span><span class="n">X_clr</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">total_CFs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="c1"># -&gt; &quot;3 counterfactual(s) flipping CRC -&gt; Control; features changed:</span>
+<span class="c1">#     min=10, median=10, max=14; validity=100%.&quot;</span>
+
+<span class="n">cf</span><span class="o">.</span><span class="n">changes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>   <span class="c1"># tidy table: feature, original, counterfactual, delta, direction</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">explain_counterfactual</span></code> returns a
+<a class="reference internal" href="modules.html#microfactual.explainability.result.CounterfactualResult" title="microfactual.explainability.result.CounterfactualResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">CounterfactualResult</span></code></a> (pass
+<code class="docutils literal notranslate"><span class="pre">return_raw=True</span></code> for the underlying <a class="reference external" href="https://github.com/interpretml/DiCE">DiCE</a>
+object). It exposes <code class="docutils literal notranslate"><span class="pre">.changes()</span></code>, <code class="docutils literal notranslate"><span class="pre">.n_changes</span></code>, <code class="docutils literal notranslate"><span class="pre">.validity</span></code> and
+<code class="docutils literal notranslate"><span class="pre">.summary()</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Keep the <strong>real taxon names</strong> as your feature columns. MicroFactual’s
+preprocessing transforms preserve them end-to-end, and DiCE handles names
+with spaces/brackets fine — so <code class="docutils literal notranslate"><span class="pre">.changes()</span></code> names actual species (e.g.
+<em>Parvimonas micra</em>) instead of opaque <code class="docutils literal notranslate"><span class="pre">f0</span></code>/<code class="docutils literal notranslate"><span class="pre">f1</span></code> placeholders. Renaming
+features to positional ids throws away the interpretability that is the whole
+point of a counterfactual.</p>
+</div>
+</section>
+<section id="actionable-sparse-counterfactuals">
+<h2>Actionable (sparse) counterfactuals<a class="headerlink" href="#actionable-sparse-counterfactuals" title="Link to this heading"></a></h2>
+<p>By default DiCE’s genetic search perturbs <em>every</em> feature, which is useless for
+interpretation. <code class="docutils literal notranslate"><span class="pre">explain_counterfactual</span></code> therefore applies <strong>post-hoc
+sparsification</strong> (<code class="docutils literal notranslate"><span class="pre">sparse=True</span></code>): changed taxa are reverted one at a time,
+smallest change first, keeping a revert only while the prediction still flips.
+On a real CRC model this reduces a counterfactual from <em>220 taxa changed</em> to
+<em>~10</em> — a genuinely actionable “change these few taxa” statement.</p>
+<p>Two further controls target actionability directly:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">features_to_vary=[...]</span></code> restricts the search to taxa you consider
+modifiable (e.g. diet-associated genera), leaving host/fixed factors alone.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">permitted_range={feature:</span> <span class="pre">[lo,</span> <span class="pre">hi]}</span></code> bounds counterfactual values to a
+plausible range.</p></li>
+</ul>
+</section>
+<section id="plausibility-keep-counterfactuals-in-distribution">
+<h2>Plausibility: keep counterfactuals in-distribution<a class="headerlink" href="#plausibility-keep-counterfactuals-in-distribution" title="Link to this heading"></a></h2>
+<p>Left unconstrained, DiCE can propose counterfactual abundances far beyond
+anything seen in real samples (values many standard deviations past the control
+range). Bound the search to the reference class’s observed range with
+<a class="reference internal" href="modules.html#microfactual.explainability.plausibility.plausible_range" title="microfactual.explainability.plausibility.plausible_range"><code class="xref py py-func docutils literal notranslate"><span class="pre">plausible_range()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">plausible_range</span><span class="p">(</span><span class="n">X_clr</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">reference_class</span><span class="o">=</span><span class="n">control_label</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">))</span>
+<span class="n">cf</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">explain_counterfactual</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">background_data</span><span class="o">=</span><span class="n">X_clr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">permitted_range</span><span class="o">=</span><span class="n">bounds</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>On the CRC data this both removes the overshoot (counterfactual values land
+within the control range rather than beyond it) and raises the fraction of
+changes that move toward the control distribution.</p>
+<p><a class="reference internal" href="modules.html#microfactual.explainability.plausibility.counterfactual_concordance" title="microfactual.explainability.plausibility.counterfactual_concordance"><code class="xref py py-func docutils literal notranslate"><span class="pre">counterfactual_concordance()</span></code></a>
+scores that directly — the fraction of changed taxa whose counterfactual moves
+<em>toward</em> the reference-class median (higher is more plausible):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span><span class="o">.</span><span class="n">counterfactual_concordance</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">X_clr</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">reference_class</span><span class="o">=</span><span class="n">control_label</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="visualizing-a-counterfactual-against-class-references">
+<h2>Visualizing a counterfactual against class references<a class="headerlink" href="#visualizing-a-counterfactual-against-class-references" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="modules.html#microfactual.visualization.counterfactual_plots.plot_counterfactual_heatmap" title="microfactual.visualization.counterfactual_plots.plot_counterfactual_heatmap"><code class="xref py py-func docutils literal notranslate"><span class="pre">plot_counterfactual_heatmap()</span></code></a>
+draws the changed taxa as rows with the sample’s original value, its
+counterfactual value, and the class medians as columns — all in reference-class
+standard deviations (0 = reference centre). It makes the story visual: the
+<em>Original</em> column sits far from centre, and a good <em>Counterfactual</em> moves back
+toward it without overshooting. The title reports the concordance score.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mf</span><span class="o">.</span><span class="n">plot_counterfactual_heatmap</span><span class="p">(</span>
+    <span class="n">cf</span><span class="p">,</span> <span class="n">X_clr</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">reference_class</span><span class="o">=</span><span class="n">control_label</span><span class="p">,</span>   <span class="c1"># e.g. the Control class</span>
+    <span class="n">comparison_class</span><span class="o">=</span><span class="n">disease_label</span><span class="p">,</span>  <span class="c1"># optional, shown for contrast</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="cohort-level-counterfactual-importance">
+<h2>Cohort-level counterfactual importance<a class="headerlink" href="#cohort-level-counterfactual-importance" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="modules.html#microfactual.explainability.counterfactuals.counterfactual_importance" title="microfactual.explainability.counterfactuals.counterfactual_importance"><code class="xref py py-func docutils literal notranslate"><span class="pre">counterfactual_importance()</span></code></a>
+runs counterfactuals across many samples and ranks taxa by <strong>how often they must
+change to flip predictions</strong>, with a net direction:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">imp</span> <span class="o">=</span> <span class="n">mf</span><span class="o">.</span><span class="n">counterfactual_importance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_clr</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># columns: feature, n_samples, frequency, mean_delta, direction</span>
+</pre></div>
+</div>
+<p>Unlike a global feature-importance score, this is <em>local-aggregated</em>: it reflects
+the taxa that actually drive individual decisions across the cohort.</p>
+</section>
+<section id="methodology-assumptions">
+<h2>Methodology &amp; assumptions<a class="headerlink" href="#methodology-assumptions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Search space = model input space.</strong> DiCE perturbs the <em>inputs</em> the model was
+trained on. Fit the model, and pass <code class="docutils literal notranslate"><span class="pre">query</span></code>/<code class="docutils literal notranslate"><span class="pre">background_data</span></code>, in the
+<strong>same feature space</strong> — if the model was trained on CLR-transformed
+abundances, explain in CLR space. Explaining a model whose preprocessing is
+baked into the estimator (<code class="docutils literal notranslate"><span class="pre">preprocessing=&quot;auto&quot;</span></code>) will search over the raw
+inputs, which is usually <em>not</em> what you want; transform first and use
+<code class="docutils literal notranslate"><span class="pre">preprocessing=None</span></code>.</p></li>
+<li><p><strong>Background data defines plausibility.</strong> DiCE samples candidate
+counterfactuals guided by <code class="docutils literal notranslate"><span class="pre">background_data</span></code>. A representative training set
+yields more realistic counterfactuals; a small or skewed one yields less
+trustworthy ones.</p></li>
+<li><p><strong>Diversity vs. proximity.</strong> <code class="docutils literal notranslate"><span class="pre">total_CFs</span></code> controls how many alternative
+counterfactuals are returned. Multiple counterfactuals expose <em>different</em>
+minimal routes across the boundary rather than a single point estimate.</p></li>
+</ul>
+</section>
+<section id="interpretation-guidance">
+<h2>Interpretation guidance<a class="headerlink" href="#interpretation-guidance" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Read a counterfactual as <em>“a sample like this one but with these taxa shifted
+would likely be classified as the other group”</em> — a statement about the
+<strong>model</strong>, not a validated biological intervention.</p></li>
+<li><p>Prefer changes that are consistent across several counterfactuals and across
+several query samples of the same class; single-counterfactual changes can be
+artifacts of the search.</p></li>
+<li><p>Report the feature space (raw / relative-abundance / CLR) alongside any
+counterfactual, since the magnitude of a “minimal change” is only meaningful
+relative to that space.</p></li>
+</ul>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Compositional constraints are not enforced.</strong> Counterfactuals in CLR space
+are not guaranteed to map back to a valid composition on the simplex (values
+summing to a constant). Treat the suggested shifts as directional rather than
+exact recipes. Constrained, simplex-aware counterfactuals are on the roadmap.</p></li>
+<li><p><strong>Binary classification only</strong> in the current release.</p></li>
+<li><p><strong>Correlated taxa.</strong> Microbiome features are highly correlated; a
+counterfactual may shift one taxon as a proxy for a correlated group. Corroborate
+with domain knowledge before drawing biological conclusions.</p></li>
+<li><p>Requires the optional <code class="docutils literal notranslate"><span class="pre">explainability</span></code> extra
+(<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'microfactual[explainability]'</span></code>).</p></li>
+</ul>
+<p>See also the end-to-end notebook <code class="docutils literal notranslate"><span class="pre">notebooks/00_End_to_End_Feature_Tour.ipynb</span></code>
+for a runnable example on a real colorectal-cancer dataset.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="MicroFactual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing: choosing filters and transforms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Simeon Hebrew, Lawrence Adu-Gyamfi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

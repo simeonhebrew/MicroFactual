@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preprocessing: choosing filters and transforms &mdash; MicroFactual 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Microfactual API Reference" href="modules.html" />
+    <link rel="prev" title="Counterfactual Explanations" href="counterfactuals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            MicroFactual
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="counterfactuals.html">Counterfactual Explanations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing: choosing filters and transforms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-filter-at-all">Why filter at all?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abundance-cutoff">Abundance cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prevalence-cutoff">Prevalence cutoff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clr-transform">CLR transform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#known-limitations">Known limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#doing-it-manually">Doing it manually</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Microfactual API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MicroFactual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Preprocessing: choosing filters and transforms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/preprocessing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="preprocessing-choosing-filters-and-transforms">
+<h1>Preprocessing: choosing filters and transforms<a class="headerlink" href="#preprocessing-choosing-filters-and-transforms" title="Link to this heading"></a></h1>
+<p>MicrobiomeClassifier’s <code class="docutils literal notranslate"><span class="pre">preprocessing=&quot;auto&quot;</span></code> applies three steps in order:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="modules.html#microfactual.preprocessing.transforms.AbundanceFilter" title="microfactual.preprocessing.transforms.AbundanceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbundanceFilter</span></code></a> — drop
+very-low-abundance taxa (<code class="docutils literal notranslate"><span class="pre">min_abundance=1e-6</span></code>).</p></li>
+<li><p><a class="reference internal" href="modules.html#microfactual.preprocessing.transforms.PrevalenceFilter" title="microfactual.preprocessing.transforms.PrevalenceFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrevalenceFilter</span></code></a> — drop taxa
+present in too few samples (<code class="docutils literal notranslate"><span class="pre">min_prevalence=0.01</span></code>).</p></li>
+<li><p><a class="reference internal" href="modules.html#microfactual.preprocessing.transforms.CLRTransform" title="microfactual.preprocessing.transforms.CLRTransform"><code class="xref py py-class docutils literal notranslate"><span class="pre">CLRTransform</span></code></a> — centered
+log-ratio transform (<code class="docutils literal notranslate"><span class="pre">pseudocount=1e-6</span></code>).</p></li>
+</ol>
+<p>Those are the values <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> uses. Note the standalone <code class="docutils literal notranslate"><span class="pre">PrevalenceFilter</span></code>
+class defaults to <code class="docutils literal notranslate"><span class="pre">min_prevalence=0.05</span></code>; <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> deliberately sets a looser
+<code class="docutils literal notranslate"><span class="pre">0.01</span></code>. Use <code class="xref py py-func docutils literal notranslate"><span class="pre">explore()</span></code> to pick
+these from your own data rather than trusting any default blindly.</p>
+<section id="why-filter-at-all">
+<h2>Why filter at all?<a class="headerlink" href="#why-filter-at-all" title="Link to this heading"></a></h2>
+<p>Microbiome feature tables are wide and sparse (often 80–95% zeros). Most taxa are
+low-abundance, rarely observed, or sequencing noise / contaminants. Filtering:</p>
+<ul class="simple">
+<li><p>removes features that carry little signal and inflate the multiple-comparison
+and overfitting burden;</p></li>
+<li><p>stabilises the CLR transform, whose geometric mean is sensitive to a long tail
+of near-zero values.</p></li>
+</ul>
+</section>
+<section id="abundance-cutoff">
+<h2>Abundance cutoff<a class="headerlink" href="#abundance-cutoff" title="Link to this heading"></a></h2>
+<p>The <strong>log10 histogram of per-taxon mean abundance is typically bimodal</strong> — a
+low-abundance “noise” mode and a higher “signal” mode. The trough between them is
+the natural cutoff. <code class="docutils literal notranslate"><span class="pre">mf.explore(dataset)</span></code> draws this histogram with the
+proposed cutoff overlaid, so you can see whether <code class="docutils literal notranslate"><span class="pre">1e-6</span></code> sits in the trough for
+<em>your</em> data (it may not — relative-abundance vs. count tables differ by orders of
+magnitude).</p>
+<ul class="simple">
+<li><p><strong>Use a higher cutoff</strong> when you only trust well-quantified taxa, or the table
+is relative abundance already normalised to 1.</p></li>
+<li><p><strong>Use a lower cutoff</strong> for deeply-sequenced count data where rare taxa are
+still reliable.</p></li>
+</ul>
+</section>
+<section id="prevalence-cutoff">
+<h2>Prevalence cutoff<a class="headerlink" href="#prevalence-cutoff" title="Link to this heading"></a></h2>
+<p>Prevalence is the fraction of samples in which a taxon appears. The distribution
+is typically U-shaped (taxa present almost never or almost always). <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>
+uses <code class="docutils literal notranslate"><span class="pre">0.01</span></code> (removes taxa seen in &lt;1% of samples); the standalone class
+defaults to <code class="docutils literal notranslate"><span class="pre">0.05</span></code>. Raise it (e.g. <code class="docutils literal notranslate"><span class="pre">0.1</span></code>) when you want features informative
+across the cohort rather than a handful of samples — often the bigger lever on
+model stability than the abundance cutoff.</p>
+</section>
+<section id="clr-transform">
+<h2>CLR transform<a class="headerlink" href="#clr-transform" title="Link to this heading"></a></h2>
+<p>Microbiome abundances are <strong>compositional</strong>: they are relative (constrained to a
+constant sum), so only <em>ratios</em> between taxa carry information, not absolute
+values. The centered log-ratio (CLR) maps compositions to a real-valued space
+where standard classifiers and distances behave sensibly, by taking the log of
+each part divided by the sample’s geometric mean.</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">pseudocount</span></code> replaces zeros before the log. Its value affects how
+strongly zeros are pulled toward the low end; report it alongside results.</p></li>
+<li><p>CLR keeps real taxon names, so counterfactuals and importances stay
+interpretable (see <a class="reference internal" href="counterfactuals.html"><span class="doc">Counterfactual Explanations</span></a>).</p></li>
+</ul>
+<p>When <em>not</em> to CLR: if you plan to interpret absolute abundances directly, or your
+downstream model already assumes compositional structure, CLR may not be
+appropriate.</p>
+</section>
+<section id="known-limitations">
+<h2>Known limitations<a class="headerlink" href="#known-limitations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Zero handling is pseudocount-based</strong>, not model-based; results can be
+sensitive to the pseudocount on very sparse tables.</p></li>
+<li><p><strong>CLR only</strong>, no ILR/ALR. CLR components are not fully independent (they sum to
+zero by construction). An isometric log-ratio (ILR) basis avoids this but needs
+a chosen partition; it is on the roadmap.</p></li>
+<li><p>Filtering thresholds are <strong>global</strong>, not per-class; extremely class-imbalanced
+taxa may be dropped. Inspect with <code class="docutils literal notranslate"><span class="pre">mf.explore</span></code> before committing.</p></li>
+</ul>
+</section>
+<section id="doing-it-manually">
+<h2>Doing it manually<a class="headerlink" href="#doing-it-manually" title="Link to this heading"></a></h2>
+<p>The transforms are plain scikit-learn transformers, so you can compose them
+yourself (and preserve real taxon names):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">microfactual</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbundanceFilter</span><span class="p">,</span> <span class="n">PrevalenceFilter</span><span class="p">,</span> <span class="n">CLRTransform</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">CLRTransform</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+    <span class="n">PrevalenceFilter</span><span class="p">(</span><span class="n">min_prevalence</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+        <span class="n">AbundanceFilter</span><span class="p">(</span><span class="n">min_abundance</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">X</span><span class="p">)))</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="counterfactuals.html" class="btn btn-neutral float-left" title="Counterfactual Explanations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Microfactual API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Simeon Hebrew, Lawrence Adu-Gyamfi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
