@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrote the README roadmap (removed duplicated entries) around the v0.2.0 release plan.
 
 ### Added
+- **PyPI release setup**: a `release.yml` workflow that publishes via PyPI Trusted Publishing (OIDC, no tokens) — TestPyPI on a `v*` tag, PyPI on a published GitHub Release. Added `[project.urls]`, single-source dynamic version (read from `microfactual.__version__`), a lean sdist (excludes example datasets/notebooks, 2.4 MB → 36 KB), and `RELEASING.md` with the setup + release process.
 - **`mf.explore(dataset)`**: data-exploration panel for choosing preprocessing cutoffs — log-abundance histogram, prevalence histogram, and a joint prevalence-vs-abundance scatter, all overlaying the proposed `AbundanceFilter`/`PrevalenceFilter` cutoffs and reporting how many taxa are retained. Individual plotters (`plot_abundance_histogram`, `plot_prevalence_histogram`, `plot_prevalence_abundance`) are also exported.
 - **`mf.explain_counterfactual()`**: first-class, documented one-call entry point for per-sample counterfactual explanations (wraps `DiCEExplainer`). Exported at the top level.
 - **Actionable counterfactuals**: `explain_counterfactual()` now applies post-hoc sparsification (`sparse=True`) — greedily reducing each counterfactual to a near-minimal set of taxa changes that still flips the prediction (on the CRC model this cut changes from 220/220 taxa to ~10). Added `features_to_vary` and `permitted_range` to constrain the search to modifiable taxa / plausible ranges.
