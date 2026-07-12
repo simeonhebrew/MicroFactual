@@ -155,6 +155,28 @@ class TestExplainCounterfactual:
         assert hasattr(mf, "explain_counterfactual")
         assert "explain_counterfactual" in mf.__all__
 
+    def test_returns_single_result_when_dice_finds_nothing(self, sample_data):
+        """Empty cf_examples_list -> one empty CounterfactualResult, not a list."""
+        from microfactual.explainability import counterfactuals as cf_mod
+        from microfactual.explainability.result import CounterfactualResult
+
+        X, y = sample_data
+        model = _ThresholdModel()
+        raw = MagicMock()
+        raw.cf_examples_list = []  # DiCE returned no examples
+
+        with patch.object(cf_mod, "DiCEExplainer") as MockExplainer:
+            MockExplainer.return_value.explain.return_value = raw
+            result = cf_mod.explain_counterfactual(model, X.iloc[[0]], X, y)
+
+        # Must be a single (empty) result, never a bare list (which broke callers
+        # with AttributeError: 'list' object has no attribute 'changes').
+        assert isinstance(result, CounterfactualResult)
+        assert result.n_counterfactuals == 0
+        assert result.changes().empty  # does not raise on pd.concat([])
+        assert result.changes(0).empty
+        assert result.n_changes == []
+
 
 # === Sparsification & result object (no DiCE required) ===
 

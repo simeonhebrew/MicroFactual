@@ -254,10 +254,15 @@ def explain_counterfactual(
         return raw
 
     feature_names = list(background_data.columns)
+    # Iterate over query rows (not over cf_examples_list): DiCE may return fewer
+    # examples than queries — or an empty list — when it finds no counterfactual.
+    # We must still return one CounterfactualResult per query row.
+    cf_examples = list(getattr(raw, "cf_examples_list", None) or [])
+    n_queries = len(query)
     results = []
-    for idx, cf_example in enumerate(raw.cf_examples_list):
+    for idx in range(n_queries):
         original = query.iloc[idx][feature_names].to_numpy(dtype=float)
-        cfs_df = cf_example.final_cfs_df
+        cfs_df = cf_examples[idx].final_cfs_df if idx < len(cf_examples) else None
         if cfs_df is None or len(cfs_df) == 0:
             cfs = np.empty((0, len(feature_names)))
         else:
@@ -277,7 +282,8 @@ def explain_counterfactual(
             )
         )
 
-    return results[0] if len(results) == 1 else results
+    # Always return a single result for a single-row query (never a bare list).
+    return results[0] if n_queries == 1 else results
 
 
 def counterfactual_importance(
