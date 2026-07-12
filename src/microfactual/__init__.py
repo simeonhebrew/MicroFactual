@@ -25,9 +25,13 @@ from .visualisation import save_roc_curve
 
 # New visualization module
 from .visualization import (
+    explore,
     launch_dashboard,
+    plot_abundance_histogram,
     plot_confusion_matrix,
     plot_feature_importance,
+    plot_prevalence_abundance,
+    plot_prevalence_histogram,
     plot_roc,
 )
 
@@ -167,6 +171,11 @@ __all__ = [
     "plot_feature_importance",
     "launch_dashboard",
     "save_roc_curve",
+    # Data exploration
+    "explore",
+    "plot_abundance_histogram",
+    "plot_prevalence_histogram",
+    "plot_prevalence_abundance",
     # Explainability
     "explain_counterfactual",
     "BaseExplainer",

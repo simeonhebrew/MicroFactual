@@ -1,6 +1,12 @@
 """Visualization module for microfactual."""
 
 from microfactual.visualization.dashboard import launch_dashboard
+from microfactual.visualization.exploration import (
+    explore,
+    plot_abundance_histogram,
+    plot_prevalence_abundance,
+    plot_prevalence_histogram,
+)
 from microfactual.visualization.plots import (
     plot_confusion_matrix,
     plot_feature_importance,
@@ -12,4 +18,8 @@ __all__ = [
     "plot_confusion_matrix",
     "plot_feature_importance",
     "launch_dashboard",
+    "explore",
+    "plot_abundance_histogram",
+    "plot_prevalence_histogram",
+    "plot_prevalence_abundance",
 ]
