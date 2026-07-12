@@ -31,12 +31,49 @@ Quickstart
         total_CFs=3,
     )
 
-    # Show only the features that changed
-    cf.visualize_as_dataframe(show_only_changes=True)
+    print(cf.summary())
+    # -> "3 counterfactual(s) flipping CRC -> Control; features changed:
+    #     min=10, median=10, max=14; validity=100%."
 
-``explain_counterfactual`` wraps :class:`~microfactual.explainability.counterfactuals.DiCEExplainer`
-(built on `DiCE <https://github.com/interpretml/DiCE>`_). Use the class directly
-when you need to reuse one explainer across many query samples.
+    cf.changes(0)   # tidy table: feature, original, counterfactual, delta, direction
+
+``explain_counterfactual`` returns a
+:class:`~microfactual.explainability.result.CounterfactualResult` (pass
+``return_raw=True`` for the underlying `DiCE <https://github.com/interpretml/DiCE>`_
+object). It exposes ``.changes()``, ``.n_changes``, ``.validity`` and
+``.summary()``.
+
+Actionable (sparse) counterfactuals
+-----------------------------------
+
+By default DiCE's genetic search perturbs *every* feature, which is useless for
+interpretation. ``explain_counterfactual`` therefore applies **post-hoc
+sparsification** (``sparse=True``): changed taxa are reverted one at a time,
+smallest change first, keeping a revert only while the prediction still flips.
+On a real CRC model this reduces a counterfactual from *220 taxa changed* to
+*~10* — a genuinely actionable "change these few taxa" statement.
+
+Two further controls target actionability directly:
+
+- ``features_to_vary=[...]`` restricts the search to taxa you consider
+  modifiable (e.g. diet-associated genera), leaving host/fixed factors alone.
+- ``permitted_range={feature: [lo, hi]}`` bounds counterfactual values to a
+  plausible range.
+
+Cohort-level counterfactual importance
+--------------------------------------
+
+:func:`~microfactual.explainability.counterfactuals.counterfactual_importance`
+runs counterfactuals across many samples and ranks taxa by **how often they must
+change to flip predictions**, with a net direction:
+
+.. code-block:: python
+
+    imp = mf.counterfactual_importance(model, X_clr, y, top_n=10)
+    # columns: feature, n_samples, frequency, mean_delta, direction
+
+Unlike a global feature-importance score, this is *local-aggregated*: it reflects
+the taxa that actually drive individual decisions across the cohort.
 
 Methodology & assumptions
 --------------------------
