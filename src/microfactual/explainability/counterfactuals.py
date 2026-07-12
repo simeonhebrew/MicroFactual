@@ -54,7 +54,8 @@ class DiCEExplainer(BaseExplainer):
         if dice_ml is None:
             raise ImportError(
                 "dice-ml is required for counterfactuals. "
-                "Install it with: pip install dice-ml"
+                "Install the explainability extra with: "
+                "pip install 'microfactual[explainability]'"
             )
 
         super().__init__(model, background_data, **kwargs)

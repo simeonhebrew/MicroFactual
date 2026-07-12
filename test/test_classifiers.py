@@ -89,6 +89,50 @@ class TestMicrobiomeClassifier:
 
         assert len(scores) == 2
 
+    def test_get_params_exposes_forwarded_model_params(self):
+        """Forwarded model kwargs appear in get_params (sklearn contract)."""
+        from microfactual.models.classifiers import MicrobiomeClassifier
+
+        clf = MicrobiomeClassifier(algorithm="random_forest", n_estimators=42)
+        params = clf.get_params()
+        assert params["algorithm"] == "random_forest"
+        assert params["n_estimators"] == 42
+
+    def test_set_params_roundtrip(self):
+        """set_params can update both declared and forwarded params."""
+        from microfactual.models.classifiers import MicrobiomeClassifier
+
+        clf = MicrobiomeClassifier()
+        clf.set_params(algorithm="logistic", n_estimators=10, preprocessing=None)
+        params = clf.get_params()
+        assert params["algorithm"] == "logistic"
+        assert params["preprocessing"] is None
+        assert params["n_estimators"] == 10
+
+    def test_clone_preserves_forwarded_params(self):
+        """sklearn.clone round-trips forwarded model params."""
+        from sklearn.base import clone
+
+        from microfactual.models.classifiers import MicrobiomeClassifier
+
+        clf = MicrobiomeClassifier(algorithm="random_forest", n_estimators=33)
+        cloned = clone(clf)
+        assert cloned.get_params()["n_estimators"] == 33
+
+    def test_gridsearch_over_forwarded_param(self, sample_X, sample_y):
+        """GridSearchCV can tune a forwarded underlying-model param."""
+        from sklearn.model_selection import GridSearchCV
+
+        from microfactual.models.classifiers import MicrobiomeClassifier
+
+        grid = GridSearchCV(
+            MicrobiomeClassifier(algorithm="random_forest", preprocessing=None),
+            param_grid={"n_estimators": [5, 10]},
+            cv=2,
+        )
+        grid.fit(sample_X, sample_y)
+        assert grid.best_params_["n_estimators"] in (5, 10)
+
 
 # === High-Level API Tests ===
 

@@ -38,7 +38,8 @@ def launch_dashboard(
     if ClassifierExplainer is None:
         raise ImportError(
             "explainerdashboard is required. "
-            "Install it with: pip install explainerdashboard"
+            "Install the explainability extra with: "
+            "pip install 'microfactual[explainability]'"
         )
 
     # Sanitize column names for SHAP compatibility

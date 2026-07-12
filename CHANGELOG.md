@@ -8,14 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Lean core install**: `dice-ml` and `explainerdashboard` moved out of core dependencies into an optional `explainability` extra. Install with `pip install 'microfactual[explainability]'`. Counterfactual and dashboard entry points raise a clear ImportError pointing to the extra when it isn't installed.
+- Moved `ruff` from runtime dependencies to the dev dependency group (it is a lint tool, not a runtime requirement).
 - **Narrative reframing**: repositioned MicroFactual around interpretable, sklearn-native counterfactual explanations for microbiome classification. Updated package `description`, keywords, and README headline accordingly.
 - Rewrote the README roadmap (removed duplicated entries) around the v0.2.0 release plan.
 
 ### Added
 - `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).
+- End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.
 
 ### Fixed
 - Version metadata is now consistent: `pyproject.toml` bumped to `0.2.0` to match `microfactual.__version__`.
+- `MicrobiomeClassifier` now exposes forwarded model kwargs (e.g. `n_estimators`, `max_depth`) through `get_params`/`set_params`, so `sklearn.clone`, `set_params`, and `GridSearchCV` can tune the underlying classifier's hyperparameters. Previously these raised `Invalid parameter` under GridSearchCV.
 - CI lint (`ruff check src/microfactual`) now passes: migrated ruff config to the `[tool.ruff.lint]` section, ignored ML naming conventions (`X`/`y`) and undocumented `__init__`, per-file-ignored `E402` in the deprecated shim modules, and documented the `y` parameter on transformer `fit` methods.
 
 ## [0.1.1] - 2026-01-26
