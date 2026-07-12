@@ -1,0 +1,76 @@
+name: Release
+
+# Build once, then publish via PyPI Trusted Publishing (OIDC — no API tokens).
+#   * push a v* tag        -> publish to TestPyPI
+#   * publish a GH Release -> publish to PyPI
+on:
+  push:
+    tags:
+      - "v*"
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Validate metadata
+        run: uv run --with twine twine check dist/*
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-testpypi:
+    name: Publish to TestPyPI
+    needs: build
+    if: github.event_name == 'push' # v* tag
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/microfactual
+    permissions:
+      id-token: write # OIDC token for Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    if: github.event_name == 'release' # GitHub Release published
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/microfactual
+    permissions:
+      id-token: write # OIDC token for Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

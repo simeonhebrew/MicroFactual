@@ -1,6 +1,6 @@
 [project]
 name = "microfactual"
-version = "0.2.0"
+dynamic = ["version"]
 description = "Interpretable, sklearn-native counterfactual explanations for microbiome classification"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -45,6 +45,13 @@ dependencies = [
     "skore>=0.10.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/simeonhebrew/MicroFactual"
+Documentation = "https://simeonhebrew.github.io/MicroFactual/"
+Repository = "https://github.com/simeonhebrew/MicroFactual"
+Changelog = "https://github.com/simeonhebrew/MicroFactual/blob/main/CHANGELOG.md"
+Issues = "https://github.com/simeonhebrew/MicroFactual/issues"
+
 [project.optional-dependencies]
 # Counterfactual explainability stack — install with: pip install microfactual[explainability]
 explainability = [
@@ -71,8 +78,24 @@ docs = [
 [project.scripts]
 microfactual = "microfactual.main:main"
 
+# Single source of truth for the version: microfactual.__version__
+[tool.hatch.version]
+path = "src/microfactual/__init__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/microfactual"]
+
+# Keep the sdist lean: ship the package + project metadata, not the example
+# datasets, notebooks, or docs sources.
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src/microfactual",
+    "/README.md",
+    "/LICENSE",
+    "/CHANGELOG.md",
+    "/CITATION.cff",
+    "/pyproject.toml",
+]
 
 [build-system]
 requires = ["hatchling"]
