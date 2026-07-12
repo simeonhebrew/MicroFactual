@@ -1,4 +1,4 @@
-# Makefile for ML_Microbiome_Package
+# Makefile for MicroFactual
 
 .PHONY : venv activate install run test clean help
 # Variables
@@ -34,7 +34,7 @@ clean:
 
 # Help
 help:
-	@echo "Makefile for ML_Microbiome_Package"
+	@echo "Makefile for MicroFactual"
 	@echo "Targets:"
 	@echo "  venv       - Create a virtual environment"
 	@echo "  activate   - Instructions to activate the virtual environment"

@@ -2,7 +2,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CI](https://github.com/simeonhebrew/ML_Microbiome_Package/actions/workflows/ci.yml/badge.svg)](https://github.com/simeonhebrew/ML_Microbiome_Package/actions/workflows/ci.yml)
+[![CI](https://github.com/simeonhebrew/MicroFactual/actions/workflows/ci.yml/badge.svg)](https://github.com/simeonhebrew/MicroFactual/actions/workflows/ci.yml)
 
 **Interpretable, sklearn-native counterfactual explanations for microbiome classification.**
 
@@ -273,6 +273,6 @@ If you use MicroFactual in your research, please cite:
   title = {MicroFactual: Interpretable Microbiome ML},
   author = {Hebrew, Simeon and Adu-Gyamfi, Lawrence},
   year = {2025},
-  url = {https://github.com/simeonhebrew/ML_Microbiome_Package}
+  url = {https://github.com/simeonhebrew/MicroFactual}
 }
 ```
