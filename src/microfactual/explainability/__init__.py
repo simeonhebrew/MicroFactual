@@ -6,6 +6,10 @@ from microfactual.explainability.counterfactuals import (
     counterfactual_importance,
     explain_counterfactual,
 )
+from microfactual.explainability.plausibility import (
+    counterfactual_concordance,
+    plausible_range,
+)
 from microfactual.explainability.result import CounterfactualResult
 
 __all__ = [
@@ -14,4 +18,6 @@ __all__ = [
     "explain_counterfactual",
     "counterfactual_importance",
     "CounterfactualResult",
+    "plausible_range",
+    "counterfactual_concordance",
 ]

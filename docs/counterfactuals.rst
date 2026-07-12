@@ -69,6 +69,52 @@ Two further controls target actionability directly:
 - ``permitted_range={feature: [lo, hi]}`` bounds counterfactual values to a
   plausible range.
 
+Plausibility: keep counterfactuals in-distribution
+---------------------------------------------------
+
+Left unconstrained, DiCE can propose counterfactual abundances far beyond
+anything seen in real samples (values many standard deviations past the control
+range). Bound the search to the reference class's observed range with
+:func:`~microfactual.explainability.plausibility.plausible_range`:
+
+.. code-block:: python
+
+    bounds = mf.plausible_range(X_clr, y, reference_class=control_label, q=(0.05, 0.95))
+    cf = mf.explain_counterfactual(
+        model, query, background_data=X_clr, y=y, permitted_range=bounds
+    )
+
+On the CRC data this both removes the overshoot (counterfactual values land
+within the control range rather than beyond it) and raises the fraction of
+changes that move toward the control distribution.
+
+:func:`~microfactual.explainability.plausibility.counterfactual_concordance`
+scores that directly — the fraction of changed taxa whose counterfactual moves
+*toward* the reference-class median (higher is more plausible):
+
+.. code-block:: python
+
+    mf.counterfactual_concordance(cf, X_clr, y, reference_class=control_label)
+
+Visualizing a counterfactual against class references
+-----------------------------------------------------
+
+:func:`~microfactual.visualization.counterfactual_plots.plot_counterfactual_heatmap`
+draws the changed taxa as rows with the sample's original value, its
+counterfactual value, and the class medians as columns — all in reference-class
+standard deviations (0 = reference centre). It makes the story visual: the
+*Original* column sits far from centre, and a good *Counterfactual* moves back
+toward it without overshooting. The title reports the concordance score.
+
+.. code-block:: python
+
+    mf.plot_counterfactual_heatmap(
+        cf, X_clr, y,
+        reference_class=control_label,   # e.g. the Control class
+        comparison_class=disease_label,  # optional, shown for contrast
+        top_n=15,
+    )
+
 Cohort-level counterfactual importance
 --------------------------------------
 

@@ -58,10 +58,25 @@ Explainability
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: microfactual.explainability.result
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.explainability.plausibility
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Visualization
 -------------
 
 .. automodule:: microfactual.visualization
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: microfactual.visualization.counterfactual_plots
     :members:
     :undoc-members:
     :show-inheritance:
