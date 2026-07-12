@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the unused `BaseModel` abstract base class (it was exported but never implemented — `MicrobiomeClassifier` follows sklearn's base classes) and the orphaned pre-rename `src/microbiome_ml` package artifacts.
 
 ### Fixed
+- Updated stale references to the old repository name `ML_Microbiome_Package` (README CI badge and citation, `CITATION.cff`, `Makefile`) to the current `MicroFactual` repo.
 - **Clean import**: `import microfactual` no longer emits `DeprecationWarning`s. The functional implementations moved to non-deprecated modules (`core.processing`, `models.training`, `visualization.roc_io`); the deprecated `data_processing` / `modeling` / `visualisation` modules are now thin re-export shims that warn **only when imported directly**.
 - **Feature names (T2.3)**: `MicrobiomeClassifier.predict`/`predict_proba` no longer strip DataFrame column names, removing sklearn's "X does not have valid feature names" `UserWarning` and keeping downstream sklearn tooling working (test-suite warnings dropped from ~32 to 2).
 - `explain_counterfactual()` discards DiCE rows that don't actually flip the prediction, so results never contain zero-change "counterfactuals" (previously the default could yield `validity < 100%` and an empty `changes(0)`).

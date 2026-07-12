@@ -4,7 +4,7 @@ title: "MicroFactual: Interpretable, sklearn-native counterfactual explanations 
 type: software
 version: 0.2.0
 license: MIT
-repository-code: "https://github.com/simeonhebrew/ML_Microbiome_Package"
+repository-code: "https://github.com/simeonhebrew/MicroFactual"
 authors:
   - family-names: Hebrew
     given-names: Simeon
