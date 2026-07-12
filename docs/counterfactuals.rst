@@ -43,6 +43,15 @@ Quickstart
 object). It exposes ``.changes()``, ``.n_changes``, ``.validity`` and
 ``.summary()``.
 
+.. tip::
+
+   Keep the **real taxon names** as your feature columns. MicroFactual's
+   preprocessing transforms preserve them end-to-end, and DiCE handles names
+   with spaces/brackets fine — so ``.changes()`` names actual species (e.g.
+   *Parvimonas micra*) instead of opaque ``f0``/``f1`` placeholders. Renaming
+   features to positional ids throws away the interpretability that is the whole
+   point of a counterfactual.
+
 Actionable (sparse) counterfactuals
 -----------------------------------
 
