@@ -4,7 +4,6 @@ The MicrobiomeClassifier provides a batteries-included approach to
 microbiome classification with sensible defaults for preprocessing.
 """
 
-import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -190,9 +189,10 @@ class MicrobiomeClassifier(ClassifierMixin, BaseEstimator):
             Predicted class labels.
 
         """
-        # Convert to numpy to avoid feature name mismatch errors
-        if isinstance(X, pd.DataFrame):
-            X = X.values
+        # Pass the DataFrame through unchanged: the preprocessing transforms
+        # preserve feature names, so the fitted estimator sees the same named
+        # columns at predict time (no "X has no valid feature names" warning,
+        # and downstream sklearn tooling keeps working).
         return self.pipeline_.predict(X)
 
     def predict_proba(self, X):
@@ -209,9 +209,7 @@ class MicrobiomeClassifier(ClassifierMixin, BaseEstimator):
             Probability for each class, shape (n_samples, n_classes).
 
         """
-        # Convert to numpy to avoid feature name mismatch errors
-        if isinstance(X, pd.DataFrame):
-            X = X.values
+        # See predict(): pass the DataFrame through so feature names are kept.
         return self.pipeline_.predict_proba(X)
 
     @property

@@ -4,8 +4,8 @@ from typing import Any, Optional
 
 import pandas as pd
 
-# Import your existing data processing functions
-from ..data_processing import clr_transform, filter_data, load_data
+# Functional data-processing primitives.
+from .processing import clr_transform, filter_data, load_data
 
 
 class MicrobiomeDataset:

@@ -25,7 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).
 - End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.
 
+### Removed
+- Removed the unused `BaseModel` abstract base class (it was exported but never implemented — `MicrobiomeClassifier` follows sklearn's base classes) and the orphaned pre-rename `src/microbiome_ml` package artifacts.
+
 ### Fixed
+- **Clean import**: `import microfactual` no longer emits `DeprecationWarning`s. The functional implementations moved to non-deprecated modules (`core.processing`, `models.training`, `visualization.roc_io`); the deprecated `data_processing` / `modeling` / `visualisation` modules are now thin re-export shims that warn **only when imported directly**.
+- **Feature names (T2.3)**: `MicrobiomeClassifier.predict`/`predict_proba` no longer strip DataFrame column names, removing sklearn's "X does not have valid feature names" `UserWarning` and keeping downstream sklearn tooling working (test-suite warnings dropped from ~32 to 2).
+- `explain_counterfactual()` discards DiCE rows that don't actually flip the prediction, so results never contain zero-change "counterfactuals" (previously the default could yield `validity < 100%` and an empty `changes(0)`).
 - `explain_counterfactual()` now always returns a single `CounterfactualResult` for a single-row query, even when DiCE finds no counterfactual (previously it returned a bare `[]`, causing `AttributeError: 'list' object has no attribute 'changes'` downstream). `CounterfactualResult.changes()` also handles zero counterfactuals without raising. Empty results report `n_counterfactuals == 0` / `validity == 0` and a "No counterfactuals found." summary.
 - Version metadata is now consistent: `pyproject.toml` bumped to `0.2.0` to match `microfactual.__version__`.
 - `MicrobiomeClassifier` now exposes forwarded model kwargs (e.g. `n_estimators`, `max_depth`) through `get_params`/`set_params`, so `sklearn.clone`, `set_params`, and `GridSearchCV` can tune the underlying classifier's hyperparameters. Previously these raised `Invalid parameter` under GridSearchCV.
