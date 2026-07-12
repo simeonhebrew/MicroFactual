@@ -6,10 +6,10 @@ from typing import Any
 from sklearn.model_selection import cross_validate
 
 # Core data structures and interfaces
-from .core import BaseModel, MicrobiomeDataset
+from .core import MicrobiomeDataset
 
-# Keep existing functions available for backward compatibility
-from .data_processing import clr_transform, filter_data, load_data
+# Functional data-processing primitives (kept available at the top level).
+from .core.processing import clr_transform, filter_data, load_data
 
 # New explainability module
 from .explainability import (
@@ -23,13 +23,12 @@ from .explainability import (
 )
 from .main import main
 from .main import run_pipeline as _run_pipeline_internal
-from .modeling import train_model
 
 # New architecture components
 from .models.classifiers import MicrobiomeClassifier
+from .models.training import train_model
 from .preprocessing.transforms import AbundanceFilter, CLRTransform, PrevalenceFilter
 from .utils import get_logger, parse_args, save_results
-from .visualisation import save_roc_curve
 
 # New visualization module
 from .visualization import (
@@ -43,6 +42,7 @@ from .visualization import (
     plot_prevalence_histogram,
     plot_roc,
 )
+from .visualization.roc_io import save_roc_curve
 
 
 def run_pipeline(*args, **kwargs):
@@ -160,7 +160,6 @@ __all__ = [
     "MicrobiomeClassifier",
     # Core classes
     "MicrobiomeDataset",
-    "BaseModel",
     # Preprocessing
     "AbundanceFilter",
     "PrevalenceFilter",

@@ -155,6 +155,30 @@ class TestExplainCounterfactual:
         assert hasattr(mf, "explain_counterfactual")
         assert "explain_counterfactual" in mf.__all__
 
+    def test_drops_non_flipping_counterfactuals(self, sample_data):
+        """DiCE rows that don't flip the prediction are discarded."""
+        from microfactual.explainability import counterfactuals as cf_mod
+
+        X, y = sample_data
+        model = _ThresholdModel()  # predicts 1 iff feature 0 > 0.5
+        query = pd.DataFrame([[0.0, 0.0, 0.0]], columns=X.columns)  # predicts 0
+
+        # One row flips (feature 0 = 1.0 -> class 1), one does not (stays class 0).
+        final = pd.DataFrame(
+            [[1.0, 0.0, 0.0], [0.2, 9.0, 9.0]], columns=list(X.columns)
+        )
+        example = MagicMock()
+        example.final_cfs_df = final
+        raw = MagicMock()
+        raw.cf_examples_list = [example]
+
+        with patch.object(cf_mod, "DiCEExplainer") as MockExplainer:
+            MockExplainer.return_value.explain.return_value = raw
+            result = cf_mod.explain_counterfactual(model, query, X, y, sparse=False)
+
+        assert result.n_counterfactuals == 1  # only the flipping row survives
+        assert result.validity == 1.0
+
     def test_returns_single_result_when_dice_finds_nothing(self, sample_data):
         """Empty cf_examples_list -> one empty CounterfactualResult, not a list."""
         from microfactual.explainability import counterfactuals as cf_mod

@@ -216,8 +216,10 @@ def explain_counterfactual(
     -------
     CounterfactualResult or list of CounterfactualResult
         One result per query sample (a single result if ``query`` has one row).
-        Each exposes ``.changes()``, ``.n_changes``, ``.validity`` and
-        ``.summary()``. If ``return_raw=True``, the raw DiCE object is returned.
+        Only genuine counterfactuals — those that actually flip the prediction —
+        are kept; DiCE rows that fail to flip are discarded. Each result exposes
+        ``.changes()``, ``.n_changes``, ``.validity`` and ``.summary()``. If
+        ``return_raw=True``, the raw DiCE object is returned instead.
 
     Raises
     ------
@@ -262,15 +264,23 @@ def explain_counterfactual(
     results = []
     for idx in range(n_queries):
         original = query.iloc[idx][feature_names].to_numpy(dtype=float)
+        original_pred = int(model.predict(original.reshape(1, -1))[0])
         cfs_df = cf_examples[idx].final_cfs_df if idx < len(cf_examples) else None
         if cfs_df is None or len(cfs_df) == 0:
             cfs = np.empty((0, len(feature_names)))
         else:
-            cfs = cfs_df[feature_names].to_numpy(dtype=float)
-            if sparse:
-                cfs = np.vstack(
-                    [sparsify_counterfactual(original, row, model) for row in cfs]
-                )
+            candidates = cfs_df[feature_names].to_numpy(dtype=float)
+            # Keep only genuine counterfactuals — DiCE occasionally returns rows
+            # that do not actually flip the prediction; those aren't
+            # counterfactuals and would sparsify to zero changes.
+            valid = [
+                row
+                for row in candidates
+                if int(model.predict(row.reshape(1, -1))[0]) != original_pred
+            ]
+            if valid and sparse:
+                valid = [sparsify_counterfactual(original, row, model) for row in valid]
+            cfs = np.vstack(valid) if valid else np.empty((0, len(feature_names)))
         results.append(
             CounterfactualResult(
                 original=original,

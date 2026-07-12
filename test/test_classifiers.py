@@ -119,6 +119,18 @@ class TestMicrobiomeClassifier:
         cloned = clone(clf)
         assert cloned.get_params()["n_estimators"] == 33
 
+    def test_predict_keeps_feature_names_no_warning(self, sample_X, sample_y):
+        """predict must not emit sklearn's 'no valid feature names' UserWarning."""
+        import warnings
+
+        from microfactual.models.classifiers import MicrobiomeClassifier
+
+        clf = MicrobiomeClassifier(preprocessing=None).fit(sample_X, sample_y)
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", UserWarning)
+            clf.predict(sample_X)  # raises if the feature-name warning fires
+            clf.predict_proba(sample_X)
+
     def test_gridsearch_over_forwarded_param(self, sample_X, sample_y):
         """GridSearchCV can tune a forwarded underlying-model param."""
         from sklearn.model_selection import GridSearchCV

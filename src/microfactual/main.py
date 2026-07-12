@@ -3,10 +3,10 @@
 import sys
 import uuid
 
-from microfactual.data_processing import clr_transform, filter_data, load_data
-from microfactual.modeling import train_model
+from microfactual.core.processing import clr_transform, filter_data, load_data
+from microfactual.models.training import train_model
 from microfactual.utils import get_logger, parse_args, save_results
-from microfactual.visualisation import save_roc_curve
+from microfactual.visualization.roc_io import save_roc_curve
 
 app_logger = get_logger(__name__)
 
