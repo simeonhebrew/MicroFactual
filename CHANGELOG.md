@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.
 
 ### Fixed
+- `explain_counterfactual()` now always returns a single `CounterfactualResult` for a single-row query, even when DiCE finds no counterfactual (previously it returned a bare `[]`, causing `AttributeError: 'list' object has no attribute 'changes'` downstream). `CounterfactualResult.changes()` also handles zero counterfactuals without raising. Empty results report `n_counterfactuals == 0` / `validity == 0` and a "No counterfactuals found." summary.
 - Version metadata is now consistent: `pyproject.toml` bumped to `0.2.0` to match `microfactual.__version__`.
 - `MicrobiomeClassifier` now exposes forwarded model kwargs (e.g. `n_estimators`, `max_depth`) through `get_params`/`set_params`, so `sklearn.clone`, `set_params`, and `GridSearchCV` can tune the underlying classifier's hyperparameters. Previously these raised `Invalid parameter` under GridSearchCV.
 - CI lint (`ruff check src/microfactual`) now passes: migrated ruff config to the `[tool.ruff.lint]` section, ignored ML naming conventions (`X`/`y`) and undocumented `__init__`, per-file-ignored `E402` in the deprecated shim modules, and documented the `y` parameter on transformer `fit` methods.

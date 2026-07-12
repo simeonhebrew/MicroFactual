@@ -144,7 +144,12 @@ class CounterfactualResult:
             absolute change.
 
         """
-        indices = [cf_index] if cf_index is not None else range(self.n_counterfactuals)
+        if cf_index is not None:
+            indices = [cf_index] if 0 <= cf_index < self.n_counterfactuals else []
+        else:
+            indices = list(range(self.n_counterfactuals))
+
+        columns = ["cf", "feature", "original", "counterfactual", "delta", "direction"]
         frames = []
         for i in indices:
             cf = self.counterfactuals.iloc[i]
@@ -165,7 +170,13 @@ class CounterfactualResult:
             )
             frames.append(frame)
 
-        result = pd.concat(frames, ignore_index=True)
+        # No counterfactuals (or none changed) -> return an empty, well-typed frame
+        # rather than crashing on pd.concat([]).
+        result = (
+            pd.concat(frames, ignore_index=True)
+            if frames
+            else pd.DataFrame(columns=columns)
+        )
         if cf_index is not None:
             result = result.drop(columns="cf")
         return result
