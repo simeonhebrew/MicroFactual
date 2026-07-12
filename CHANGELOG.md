@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **`mf.explain_counterfactual()`**: first-class, documented one-call entry point for per-sample counterfactual explanations (wraps `DiCEExplainer`). Exported at the top level.
+- **Actionable counterfactuals**: `explain_counterfactual()` now applies post-hoc sparsification (`sparse=True`) — greedily reducing each counterfactual to a near-minimal set of taxa changes that still flips the prediction (on the CRC model this cut changes from 220/220 taxa to ~10). Added `features_to_vary` and `permitted_range` to constrain the search to modifiable taxa / plausible ranges.
+- **`CounterfactualResult`**: interpretable wrapper returned by `explain_counterfactual()` with `.changes()` (taxon, original→counterfactual, delta, direction), `.n_changes`, `.validity` (fraction that truly flips), and `.summary()`. Pass `return_raw=True` for the underlying DiCE object.
 - Counterfactuals methodology documentation page (`docs/counterfactuals.rst`) covering assumptions, interpretation guidance, and limitations.
 - `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).
 - End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.

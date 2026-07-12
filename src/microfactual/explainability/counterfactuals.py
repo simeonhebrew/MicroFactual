@@ -2,6 +2,7 @@
 
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 try:
@@ -10,6 +11,10 @@ except ImportError:
     dice_ml = None
 
 from microfactual.explainability.base import BaseExplainer
+from microfactual.explainability.result import (
+    CounterfactualResult,
+    sparsify_counterfactual,
+)
 
 
 class DiCEExplainer(BaseExplainer):
@@ -132,16 +137,29 @@ def explain_counterfactual(
     target_column: str = "outcome",
     total_CFs: int = 5,
     desired_class: str = "opposite",
+    features_to_vary: str | list[str] = "all",
+    permitted_range: dict[str, list[float]] | None = None,
+    sparse: bool = True,
+    class_names: list[str] | None = None,
     continuous_features: list[str] | None = None,
     method: str = "genetic",
     backend: str = "sklearn",
+    return_raw: bool = False,
     **kwargs: Any,
 ) -> Any:
-    """Generate counterfactual explanations for one or more samples.
+    """Generate actionable counterfactual explanations for one or more samples.
 
     This is MicroFactual's headline entry point: it answers *"what minimal
     change in feature values would flip this sample's prediction?"* in a single
     call, wrapping :class:`DiCEExplainer`.
+
+    Two features make the result actionable rather than a wall of numbers:
+
+    - ``features_to_vary`` / ``permitted_range`` restrict the search to the taxa
+      you consider modifiable and to plausible value ranges;
+    - ``sparse=True`` (default) post-processes each counterfactual to a
+      near-minimal set of changes that still flips the prediction, so you get
+      *"change these few taxa"* instead of *"change everything"*.
 
     Because DiCE searches for counterfactuals in the model's *input* space, pass
     ``model``, ``query`` and ``background_data`` in the **same feature space the
@@ -169,6 +187,17 @@ def explain_counterfactual(
         Number of counterfactuals to generate per query sample.
     desired_class : str, default="opposite"
         Target class for the counterfactuals ("opposite" flips the prediction).
+    features_to_vary : str or list of str, default="all"
+        Which features DiCE may change. Pass a list to restrict the search to
+        modifiable taxa (e.g. diet-associated genera).
+    permitted_range : dict, optional
+        Per-feature ``{name: [min, max]}`` bounds constraining counterfactual
+        values to a plausible range.
+    sparse : bool, default=True
+        If True, greedily reduce each counterfactual to a near-minimal set of
+        changes that preserves the flipped prediction.
+    class_names : list of str, optional
+        Human-readable class labels (indexed by integer class) for the summary.
     continuous_features : list of str, optional
         Feature names to treat as continuous. Defaults to all columns of
         ``background_data`` (appropriate for abundance / CLR features).
@@ -176,16 +205,19 @@ def explain_counterfactual(
         DiCE search method ("genetic", "random", or "kdtree").
     backend : str, default="sklearn"
         DiCE model backend.
+    return_raw : bool, default=False
+        If True, return the raw ``dice_ml`` explanation object instead of a
+        :class:`~microfactual.explainability.result.CounterfactualResult`.
     **kwargs
         Additional arguments forwarded to
         ``dice_ml.Dice.generate_counterfactuals``.
 
     Returns
     -------
-    dice_ml.counterfactual_explanations.CounterfactualExplanations
-        The explanation object. Inspect it with
-        ``result.visualize_as_dataframe(show_only_changes=True)`` or read the
-        raw counterfactuals from ``result.cf_examples_list``.
+    CounterfactualResult or list of CounterfactualResult
+        One result per query sample (a single result if ``query`` has one row).
+        Each exposes ``.changes()``, ``.n_changes``, ``.validity`` and
+        ``.summary()``. If ``return_raw=True``, the raw DiCE object is returned.
 
     Raises
     ------
@@ -197,7 +229,8 @@ def explain_counterfactual(
     >>> import microfactual as mf
     >>> model = mf.MicrobiomeClassifier(preprocessing=None).fit(X_clr, y)
     >>> cf = mf.explain_counterfactual(model, X_clr.iloc[[0]], X_clr, y)
-    >>> cf.visualize_as_dataframe(show_only_changes=True)  # doctest: +SKIP
+    >>> print(cf.summary())  # doctest: +SKIP
+    >>> cf.changes()  # doctest: +SKIP
 
     """
     explainer = DiCEExplainer(
@@ -209,6 +242,39 @@ def explain_counterfactual(
         backend=backend,
         method=method,
     )
-    return explainer.explain(
-        query, total_CFs=total_CFs, desired_class=desired_class, **kwargs
+    raw = explainer.explain(
+        query,
+        total_CFs=total_CFs,
+        desired_class=desired_class,
+        features_to_vary=features_to_vary,
+        permitted_range=permitted_range,
+        **kwargs,
     )
+    if return_raw:
+        return raw
+
+    feature_names = list(background_data.columns)
+    results = []
+    for idx, cf_example in enumerate(raw.cf_examples_list):
+        original = query.iloc[idx][feature_names].to_numpy(dtype=float)
+        cfs_df = cf_example.final_cfs_df
+        if cfs_df is None or len(cfs_df) == 0:
+            cfs = np.empty((0, len(feature_names)))
+        else:
+            cfs = cfs_df[feature_names].to_numpy(dtype=float)
+            if sparse:
+                cfs = np.vstack(
+                    [sparsify_counterfactual(original, row, model) for row in cfs]
+                )
+        results.append(
+            CounterfactualResult(
+                original=original,
+                counterfactuals=cfs,
+                model=model,
+                feature_names=feature_names,
+                class_names=class_names,
+                raw=raw,
+            )
+        )
+
+    return results[0] if len(results) == 1 else results
