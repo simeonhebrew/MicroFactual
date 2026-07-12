@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- README now leads with a runnable counterfactual example (the headline feature) instead of `mf.classify()`; features list, architecture diagram, and API reference updated to cover the counterfactual, plausibility, and data-exploration APIs.
 - **Lean core install**: `dice-ml` and `explainerdashboard` moved out of core dependencies into an optional `explainability` extra. Install with `pip install 'microfactual[explainability]'`. Counterfactual and dashboard entry points raise a clear ImportError pointing to the extra when it isn't installed.
 - Moved `ruff` from runtime dependencies to the dev dependency group (it is a lint tool, not a runtime requirement).
 - **Narrative reframing**: repositioned MicroFactual around interpretable, sklearn-native counterfactual explanations for microbiome classification. Updated package `description`, keywords, and README headline accordingly.
