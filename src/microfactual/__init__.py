@@ -16,6 +16,7 @@ from .explainability import (
     BaseExplainer,
     CounterfactualResult,
     DiCEExplainer,
+    counterfactual_importance,
     explain_counterfactual,
 )
 from .main import main
@@ -174,6 +175,7 @@ __all__ = [
     "save_roc_curve",
     # Explainability
     "explain_counterfactual",
+    "counterfactual_importance",
     "CounterfactualResult",
     "BaseExplainer",
     "DiCEExplainer",

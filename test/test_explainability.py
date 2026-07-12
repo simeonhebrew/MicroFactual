@@ -235,3 +235,41 @@ class TestCounterfactualResult:
 
         assert hasattr(mf, "CounterfactualResult")
         assert "CounterfactualResult" in mf.__all__
+
+
+class TestCounterfactualImportance:
+    """Cohort-level aggregation of counterfactuals."""
+
+    def test_aggregates_across_cohort(self):
+        from microfactual.explainability import counterfactuals as cf_mod
+        from microfactual.explainability.result import CounterfactualResult
+
+        model = _ThresholdModel()
+
+        def result(cfs):
+            return CounterfactualResult([0.0, 0.0], cfs, model, ["f0", "f1"])
+
+        # Two samples change f0 (increase); one changes f1 (decrease).
+        canned = [
+            result([[1.0, 0.0]]),
+            result([[1.0, 0.0]]),
+            result([[0.0, -1.0]]),
+        ]
+        X = pd.DataFrame({"f0": [0.0, 0.0, 0.0], "f1": [0.0, 0.0, 0.0]})
+
+        with patch.object(cf_mod, "explain_counterfactual", side_effect=canned):
+            imp = cf_mod.counterfactual_importance(model, X, y=[0, 1, 0])
+
+        f0 = imp[imp["feature"] == "f0"].iloc[0]
+        assert f0["n_samples"] == 2
+        assert f0["frequency"] == pytest.approx(2 / 3)
+        assert f0["direction"] == "increase"
+        f1 = imp[imp["feature"] == "f1"].iloc[0]
+        assert f1["n_samples"] == 1
+        assert f1["direction"] == "decrease"
+
+    def test_exported_at_top_level(self):
+        import microfactual as mf
+
+        assert hasattr(mf, "counterfactual_importance")
+        assert "counterfactual_importance" in mf.__all__
