@@ -112,11 +112,11 @@ def plot_feature_importance(
 
     Parameters
     ----------
-    importance : pd.Series, np.ndarray, or model with feature_importances_
+    importance : pd.Series, np.ndarray, or model with ``feature_importances_``
         Feature importance scores. Can be:
         - pd.Series with feature names as index
         - np.ndarray (requires feature_names)
-        - Model object with feature_importances_ attribute
+        - Model object with a ``feature_importances_`` attribute
     feature_names : list of str, optional
         Feature names (required if importance is array or model).
     top_n : int, optional
