@@ -167,8 +167,7 @@ Limitations
 - **Compositional constraints are not enforced.** Counterfactuals in CLR space
   are not guaranteed to map back to a valid composition on the simplex (values
   summing to a constant). Treat the suggested shifts as directional rather than
-  exact recipes. Constrained, simplex-aware counterfactuals are on the roadmap
-  (see the release plan, T4.3).
+  exact recipes. Constrained, simplex-aware counterfactuals are on the roadmap.
 - **Binary classification only** in the current release.
 - **Correlated taxa.** Microbiome features are highly correlated; a
   counterfactual may shift one taxon as a proxy for a correlated group. Corroborate

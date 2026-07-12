@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`mf.counterfactual_importance()`**: cohort-level aggregation that runs counterfactuals across many samples and ranks taxa by how often they must change to flip predictions, with a net direction — a local-aggregated importance complementing global feature importance.
 - **Counterfactual plausibility & visualization**: `mf.plausible_range()` derives per-taxon bounds from a reference class (feed to `permitted_range` to keep counterfactuals in-distribution — cuts overshoot); `mf.counterfactual_concordance()` scores how well a counterfactual moves toward the reference-class median; and `mf.plot_counterfactual_heatmap()` visualizes a counterfactual against the class medians in reference-SD units.
 - Counterfactuals methodology documentation page (`docs/counterfactuals.rst`) covering assumptions, interpretation guidance, and limitations.
+- **Documentation site** published to GitHub Pages (<https://simeonhebrew.github.io/MicroFactual/>): rewrote the landing page around the counterfactual-first API, added a preprocessing-rationale guide (`docs/preprocessing.rst`), and added a docs badge + link to the README. The Sphinx build is now warning-free.
 - `CITATION.cff` for GitHub "Cite this repository" support (paper DOI placeholder pending).
 - End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.
 

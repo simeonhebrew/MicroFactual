@@ -3,8 +3,11 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/simeonhebrew/MicroFactual/actions/workflows/ci.yml/badge.svg)](https://github.com/simeonhebrew/MicroFactual/actions/workflows/ci.yml)
+[![Docs](https://img.shields.io/badge/docs-live-blue.svg)](https://simeonhebrew.github.io/MicroFactual/)
 
 **Interpretable, sklearn-native counterfactual explanations for microbiome classification.**
+
+📖 **[Documentation](https://simeonhebrew.github.io/MicroFactual/)** — quickstart, counterfactuals guide, preprocessing rationale, and API reference.
 
 MicroFactual answers a question most microbiome ML tools can't: *"what minimal change in taxa abundance would flip this sample's prediction?"* It pairs per-sample counterfactual analysis with a clean sklearn-compatible surface (`Pipeline`, `GridSearchCV`, `cross_val_score`) over microbiome-aware preprocessing (abundance/prevalence filtering, CLR).
 

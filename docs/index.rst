@@ -1,86 +1,101 @@
-Microfactual Documentation
-===========================
+MicroFactual
+============
 
-A user-friendly Python framework for microbiome machine learning workflows.
+**Interpretable, sklearn-native counterfactual explanations for microbiome
+classification.**
 
-**Key Features:**
-- Easy data loading and preprocessing for microbiome datasets
-- Robust filtering and CLR transformation utilities
-- Random Forest modeling with cross-validation and hyperparameter tuning
-- Publication-ready ROC curve visualization
-- Command-line interface for reproducible pipelines
-- Type hints and numpy-style docstrings throughout
+MicroFactual answers a question most microbiome ML tools can't: *"what minimal
+change in taxa abundance would flip this sample's prediction?"* It pairs
+per-sample counterfactual analysis with a clean scikit-learn-compatible surface
+(``Pipeline``, ``GridSearchCV``, ``cross_val_score``) over microbiome-aware
+preprocessing (abundance/prevalence filtering, CLR).
 
-.. image:: https://img.shields.io/github/actions/workflow/status/<your-username>/<your-repo>/ci.yml?branch=main
-   :alt: Build Status
-   :target: https://github.com/<your-username>/<your-repo>/actions
+.. image:: https://github.com/simeonhebrew/MicroFactual/actions/workflows/ci.yml/badge.svg?branch=main
+   :alt: CI
+   :target: https://github.com/simeonhebrew/MicroFactual/actions/workflows/ci.yml
 
-Pipeline Overview
+**Non-goals:** not a replacement for QIIME2's bioinformatics pipeline, not a
+feature-engineering toolkit, not a diversity/phylogenetics library.
+
+Pipeline overview
 -----------------
 
 .. mermaid::
 
-    flowchart TD
-        A[Input Data] -->|Load| B(Dataset)
-        B -->|Filter| C[Preprocessing]
-        C -->|Transform| D[CLR/Scaling]
-        D -->|Train| E[Random Forest]
-        E -->|Explain| F[Counterfactuals]
-        E -->|Visualize| G[ROC Curves / Feature Importance]
+    flowchart LR
+        A[Feature table + metadata] -->|MicrobiomeDataset| B(Preprocessing)
+        B -->|Abundance / Prevalence / CLR| C[MicrobiomeClassifier]
+        C -->|explain_counterfactual| D[Counterfactuals]
+        C -->|plots| E[ROC / importance]
+        D -->|plausible_range + heatmap| F[Actionable, plausible explanations]
 
-Quickstart
-----------
+Installation
+------------
+
+Install from source (not yet published to PyPI):
 
 .. code-block:: bash
 
-    pip install microfactual
+    # Core install (lean)
+    pip install -e .
 
-    # Run the pipeline via CLI
-    microfactual --abundance data/abundance.txt --metadata data/metadata.txt --output_dir results/
+    # With the counterfactual explainability stack (DiCE)
+    pip install -e '.[explainability]'
 
-Usage as a library:
+Quickstart: a counterfactual
+----------------------------
 
 .. code-block:: python
 
-    from microfactual.core.dataset import load_dataset
-    from microfactual.preprocessing import filter_features, clr_transformation
-    from microfactual.models import RandomForestClassifier
-    from microfactual.explainability import CounterfactualExplainer
+    import microfactual as mf
+    from microfactual import AbundanceFilter, PrevalenceFilter, CLRTransform
 
-    # Load and process
-    data = load_dataset('abundance.txt', 'metadata.txt')
-    filtered_data = filter_features(data)
-    transformed_data = clr_transformation(filtered_data)
+    # 1. Load a real feature table + metadata
+    ds = mf.MicrobiomeDataset.from_files(
+        "abundance.tsv", "metadata.tsv",
+        target_column="Group", sample_column="Sample ID",
+    )
 
-    # Train
-    model = RandomForestClassifier()
-    model.fit(transformed_data, labels)
+    # 2. Preprocess into CLR space (real taxon names are preserved end-to-end)
+    X = CLRTransform().fit_transform(
+        PrevalenceFilter(min_prevalence=0.1).fit_transform(
+            AbundanceFilter(min_abundance=1e-5).fit_transform(ds.X)))
+    y = ds.y
 
-    # Explain
-    explainer = CounterfactualExplainer(model)
-    explanation = explainer.explain(instance)
+    # 3. Fit an sklearn-compatible classifier in that space
+    model = mf.MicrobiomeClassifier(preprocessing=None).fit(X, y)
+
+    # 4. What minimal change flips this sample's prediction?
+    cf = mf.explain_counterfactual(
+        model, X.iloc[[0]], background_data=X, y=y,
+        class_names=list(ds.target_names),
+    )
+    print(cf.summary())
+    cf.changes(0)   # taxon, original -> counterfactual, delta, direction
+
+See the :doc:`counterfactuals` guide for plausibility bounds, cohort-level
+importance, and the class-reference heatmap, and :doc:`preprocessing` for how to
+choose the filtering and transform defaults.
 
 Contents
 --------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Guides
 
    counterfactuals
+   preprocessing
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
+
    modules
 
-API Reference
--------------
+Links
+-----
 
-- The API documentation is auto-generated from the source code docstrings.
-
-Contributing
-------------
-
-- Contributions are welcome! See the repository for guidelines.
-- For more, see the `README <../README.md>`_ or visit the `GitHub repo <https://github.com/<your-username>/<your-repo>>`_.
-
----
-
-*This documentation is generated with Sphinx.*
+- Source: https://github.com/simeonhebrew/MicroFactual
+- Runnable examples: ``notebooks/`` in the repository (start with the
+  end-to-end feature tour).

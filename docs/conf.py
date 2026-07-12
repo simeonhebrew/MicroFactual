@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
 
-project = "microfactual"
+project = "MicroFactual"
 copyright = "2025, Simeon Hebrew, Lawrence Adu-Gyamfi"
 author = "Simeon Hebrew, Lawrence Adu-Gyamfi"
 release = "0.2.0"
@@ -25,8 +25,17 @@ autodoc_default_options = {
     "undoc-members": True,
     "private-members": False,
     "show-inheritance": True,
-    "inherited-members": True,
+    # Don't pull in inherited sklearn base-class methods — their docstrings
+    # reference sklearn-internal labels that don't resolve here (noise).
+    "inherited-members": False,
 }
+
+# Suppress cross-reference warnings that originate in third-party (sklearn)
+# docstrings — e.g. the auto-injected metadata-routing methods — and harmless
+# duplicate-object refs from package re-exports. Our own .rst uses none of these
+# (no ``:ref:`` labels or glossary terms), so this only silences sklearn noise.
+suppress_warnings = ["ref.python", "ref.ref", "ref.term"]
+nitpicky = False
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
