@@ -1,12 +1,3 @@
-Microfactual Documentation
-===========================
-
-.. toctree::
-   :maxdepth=2
-   :caption: Contents:
-
-   modules
-
 Microfactual API Reference
 ===========================
 
@@ -31,12 +22,7 @@ Preprocessing
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: microfactual.preprocessing.filtering
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. automodule:: microfactual.preprocessing.transformation
+.. automodule:: microfactual.preprocessing.transforms
     :members:
     :undoc-members:
     :show-inheritance:

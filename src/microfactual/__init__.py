@@ -12,7 +12,7 @@ from .core import BaseModel, MicrobiomeDataset
 from .data_processing import clr_transform, filter_data, load_data
 
 # New explainability module
-from .explainability import BaseExplainer, DiCEExplainer
+from .explainability import BaseExplainer, DiCEExplainer, explain_counterfactual
 from .main import main
 from .main import run_pipeline as _run_pipeline_internal
 from .modeling import train_model
@@ -168,6 +168,7 @@ __all__ = [
     "launch_dashboard",
     "save_roc_curve",
     # Explainability
+    "explain_counterfactual",
     "BaseExplainer",
     "DiCEExplainer",
     # Utilities
