@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Version metadata is now consistent: `pyproject.toml` bumped to `0.2.0` to match `microfactual.__version__`.
 - `MicrobiomeClassifier` now exposes forwarded model kwargs (e.g. `n_estimators`, `max_depth`) through `get_params`/`set_params`, so `sklearn.clone`, `set_params`, and `GridSearchCV` can tune the underlying classifier's hyperparameters. Previously these raised `Invalid parameter` under GridSearchCV.
+- CI lint (`ruff check src/microfactual`) now passes: migrated ruff config to the `[tool.ruff.lint]` section, ignored ML naming conventions (`X`/`y`) and undocumented `__init__`, per-file-ignored `E402` in the deprecated shim modules, and documented the `y` parameter on transformer `fit` methods.
 
 ## [0.1.1] - 2026-01-26
 

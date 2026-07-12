@@ -200,8 +200,8 @@ class MicrobiomeDataset:
             .to_dict(),
             # Data quality metrics
             'sparsity': (self.abundance == 0).sum().sum() / self.abundance.size,
-            'mean_reads_per_sample': self.abundance.sum(axis=0).mean(),
-            'std_reads_per_sample': self.abundance.sum(axis=0).std(),
+            'mean_relative_abundance_per_sample': self.abundance.sum(axis=0).mean(),
+            'std_relative_abundance_per_sample': self.abundance.sum(axis=0).std(),
             # Feature statistics
             'mean_features_per_sample': (self.abundance > 0).sum(axis=0).mean(),
             'features_present_all_samples': ((self.abundance > 0).all(axis=1)).sum(),
@@ -358,7 +358,7 @@ class MicrobiomeDataset:
             print("Warning: Negative values found in abundance data")
 
     def __repr__(self) -> str:
-        """String representation of the dataset."""
+        """Return a concise string representation of the dataset."""
         return (
             f"MicrobiomeDataset(n_samples={self.abundance.shape[1]}, "
             f"n_features={self.abundance.shape[0]}, "
