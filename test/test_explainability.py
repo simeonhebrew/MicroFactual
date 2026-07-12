@@ -126,12 +126,15 @@ class TestExplainCounterfactual:
                 background_data=X,
                 y=y,
                 total_CFs=3,
+                features_to_vary=["Bacteroides"],
+                return_raw=True,  # skip result wrapping for this wiring test
             )
 
             mock_exp_instance.generate_counterfactuals.assert_called_once()
             _, called_kwargs = mock_exp_instance.generate_counterfactuals.call_args
             assert called_kwargs["total_CFs"] == 3
             assert called_kwargs["desired_class"] == "opposite"
+            assert called_kwargs["features_to_vary"] == ["Bacteroides"]
 
     def test_raises_without_dice(self, sample_data, mock_model):
         """A clear ImportError is raised when dice-ml is unavailable."""
@@ -151,3 +154,122 @@ class TestExplainCounterfactual:
 
         assert hasattr(mf, "explain_counterfactual")
         assert "explain_counterfactual" in mf.__all__
+
+
+# === Sparsification & result object (no DiCE required) ===
+
+
+class _ThresholdModel:
+    """Toy classifier: predicts class 1 iff feature 0 exceeds 0.5."""
+
+    def predict(self, X):
+        X = np.asarray(X)
+        return (X[:, 0] > 0.5).astype(int)
+
+
+class TestSparsify:
+    """The greedy post-hoc sparsifier."""
+
+    def test_reverts_irrelevant_changes(self):
+        from microfactual.explainability.result import sparsify_counterfactual
+
+        model = _ThresholdModel()
+        original = np.array([0.0, 0.0, 0.0, 0.0])
+        counterfactual = np.array([1.0, 1.0, 1.0, 1.0])  # all changed, flips to 1
+
+        sparse = sparsify_counterfactual(original, counterfactual, model)
+
+        # Only feature 0 matters for the flip; the rest revert to original.
+        assert sparse[0] == 1.0
+        assert (sparse[1:] == 0.0).all()
+
+    def test_preserves_prediction(self):
+        from microfactual.explainability.result import sparsify_counterfactual
+
+        model = _ThresholdModel()
+        original = np.array([0.0, 0.2, 0.9])
+        counterfactual = np.array([1.0, 0.8, 0.1])
+
+        sparse = sparsify_counterfactual(original, counterfactual, model)
+        assert model.predict(sparse.reshape(1, -1))[0] == 1
+
+
+class TestCounterfactualResult:
+    """The interpretable result wrapper."""
+
+    def _make(self):
+        from microfactual.explainability.result import CounterfactualResult
+
+        model = _ThresholdModel()
+        return CounterfactualResult(
+            original=[0.0, 0.0, 0.0],
+            counterfactuals=[[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]],
+            model=model,
+            feature_names=["f0", "f1", "f2"],
+            class_names=["Healthy", "Disease"],
+        )
+
+    def test_n_changes(self):
+        res = self._make()
+        assert res.n_changes == [1, 1]
+
+    def test_validity(self):
+        # cf0 ([1,0,0]) flips to 1; cf1 ([0,0,1]) does not -> 0.5
+        res = self._make()
+        assert res.validity == 0.5
+
+    def test_changes_table(self):
+        res = self._make()
+        changes = res.changes(0)
+        assert list(changes["feature"]) == ["f0"]
+        assert changes.iloc[0]["direction"] == "increase"
+        assert changes.iloc[0]["delta"] == 1.0
+
+    def test_summary_uses_class_names(self):
+        res = self._make()
+        assert "Healthy" in res.summary()
+        assert "Disease" in res.summary()
+
+    def test_exported_at_top_level(self):
+        import microfactual as mf
+
+        assert hasattr(mf, "CounterfactualResult")
+        assert "CounterfactualResult" in mf.__all__
+
+
+class TestCounterfactualImportance:
+    """Cohort-level aggregation of counterfactuals."""
+
+    def test_aggregates_across_cohort(self):
+        from microfactual.explainability import counterfactuals as cf_mod
+        from microfactual.explainability.result import CounterfactualResult
+
+        model = _ThresholdModel()
+
+        def result(cfs):
+            return CounterfactualResult([0.0, 0.0], cfs, model, ["f0", "f1"])
+
+        # Two samples change f0 (increase); one changes f1 (decrease).
+        canned = [
+            result([[1.0, 0.0]]),
+            result([[1.0, 0.0]]),
+            result([[0.0, -1.0]]),
+        ]
+        X = pd.DataFrame({"f0": [0.0, 0.0, 0.0], "f1": [0.0, 0.0, 0.0]})
+
+        with patch.object(cf_mod, "explain_counterfactual", side_effect=canned):
+            imp = cf_mod.counterfactual_importance(model, X, y=[0, 1, 0])
+
+        f0 = imp[imp["feature"] == "f0"].iloc[0]
+        assert f0["n_samples"] == 2
+        assert f0["frequency"] == pytest.approx(2 / 3)
+        assert f0["direction"] == "increase"
+        f1 = imp[imp["feature"] == "f1"].iloc[0]
+        assert f1["n_samples"] == 1
+        assert f1["direction"] == "decrease"
+
+    def test_exported_at_top_level(self):
+        import microfactual as mf
+
+        assert hasattr(mf, "counterfactual_importance")
+        assert "counterfactual_importance" in mf.__all__

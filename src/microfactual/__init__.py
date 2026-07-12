@@ -12,7 +12,13 @@ from .core import BaseModel, MicrobiomeDataset
 from .data_processing import clr_transform, filter_data, load_data
 
 # New explainability module
-from .explainability import BaseExplainer, DiCEExplainer, explain_counterfactual
+from .explainability import (
+    BaseExplainer,
+    CounterfactualResult,
+    DiCEExplainer,
+    counterfactual_importance,
+    explain_counterfactual,
+)
 from .main import main
 from .main import run_pipeline as _run_pipeline_internal
 from .modeling import train_model
@@ -178,6 +184,8 @@ __all__ = [
     "plot_prevalence_abundance",
     # Explainability
     "explain_counterfactual",
+    "counterfactual_importance",
+    "CounterfactualResult",
     "BaseExplainer",
     "DiCEExplainer",
     # Utilities
