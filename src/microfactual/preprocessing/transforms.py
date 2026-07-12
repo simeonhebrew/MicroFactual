@@ -34,7 +34,8 @@ class AbundanceFilter(BaseEstimator, TransformerMixin):
         ----------
         X : pd.DataFrame
             Abundance data (samples x features).
-        y : ignored
+        y : None
+            Ignored; present for scikit-learn API compatibility.
 
         """
         if isinstance(X, pd.DataFrame):
@@ -118,7 +119,8 @@ class PrevalenceFilter(BaseEstimator, TransformerMixin):
         ----------
         X : pd.DataFrame
             Abundance data (samples x features).
-        y : ignored
+        y : None
+            Ignored; present for scikit-learn API compatibility.
 
         """
         if isinstance(X, pd.DataFrame):
@@ -206,7 +208,8 @@ class CLRTransform(BaseEstimator, TransformerMixin):
         ----------
         X : pd.DataFrame
             Abundance data (samples x features).
-        y : ignored
+        y : None
+            Ignored; present for scikit-learn API compatibility.
 
         """
         if isinstance(X, pd.DataFrame):

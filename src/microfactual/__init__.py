@@ -33,7 +33,7 @@ from .visualization import (
 
 
 def run_pipeline(*args, **kwargs):
-    """Deprecated: Use mf.classify() instead."""
+    """Run the legacy pipeline (deprecated; use ``mf.classify()`` instead)."""
     warnings.warn(
         "run_pipeline is deprecated and will be removed in v1.0. "
         "Use microfactual.classify() instead.",
