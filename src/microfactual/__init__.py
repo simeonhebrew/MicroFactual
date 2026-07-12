@@ -33,7 +33,6 @@ from .utils import get_logger, parse_args, save_results
 # New visualization module
 from .visualization import (
     explore,
-    launch_dashboard,
     plot_abundance_histogram,
     plot_confusion_matrix,
     plot_counterfactual_heatmap,
@@ -177,7 +176,6 @@ __all__ = [
     "plot_roc",
     "plot_confusion_matrix",
     "plot_feature_importance",
-    "launch_dashboard",
     "save_roc_curve",
     # Data exploration
     "explore",

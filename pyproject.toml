@@ -46,10 +46,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Heavy interpretability stack — install with: pip install microfactual[explainability]
+# Counterfactual explainability stack — install with: pip install microfactual[explainability]
 explainability = [
     "dice-ml>=0.9",
-    "explainerdashboard>=0.5.1",
 ]
 
 [dependency-groups]

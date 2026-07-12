@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - README now leads with a runnable counterfactual example (the headline feature) instead of `mf.classify()`; features list, architecture diagram, and API reference updated to cover the counterfactual, plausibility, and data-exploration APIs.
-- **Lean core install**: `dice-ml` and `explainerdashboard` moved out of core dependencies into an optional `explainability` extra. Install with `pip install 'microfactual[explainability]'`. Counterfactual and dashboard entry points raise a clear ImportError pointing to the extra when it isn't installed.
+- **Lean core install**: `dice-ml` moved out of core dependencies into an optional `explainability` extra. Install with `pip install 'microfactual[explainability]'`. The counterfactual entry points raise a clear ImportError pointing to the extra when it isn't installed.
 - Moved `ruff` from runtime dependencies to the dev dependency group (it is a lint tool, not a runtime requirement).
 - **Narrative reframing**: repositioned MicroFactual around interpretable, sklearn-native counterfactual explanations for microbiome classification. Updated package `description`, keywords, and README headline accordingly.
 - Rewrote the README roadmap (removed duplicated entries) around the v0.2.0 release plan.
@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - End-to-end feature-tour notebook (`notebooks/00_End_to_End_Feature_Tour.ipynb`) exercising the full public API on the shipped Zeller 2014 CRC dataset.
 
 ### Removed
+- **Retired the ExplainerDashboard integration**: removed `mf.launch_dashboard()` and the `microfactual.visualization.dashboard` module, and dropped `explainerdashboard` from the `explainability` extra (now just `dice-ml`). The dashboard was off-narrative for a counterfactual-first library; use the built-in plots and counterfactual explanations instead.
 - Pruned the `notebooks/` folder to a curated, verified set (`00` feature tour, `01` classify quickstart, `02` modular pipelines) with an index `README`. Removed notebooks/scripts that used deprecated APIs or were superseded by the feature tour (`03_Interactive_Dashboard`, `04_Explainability_Counterfactuals`, `counterfactuals_example.ipynb`/`.py`, `explainerboard_visualisation.ipynb`, `ml_example.py`) and the committed `dice_cf_outputs/` artifacts.
 - Removed the unused `BaseModel` abstract base class (it was exported but never implemented — `MicrobiomeClassifier` follows sklearn's base classes) and the orphaned pre-rename `src/microbiome_ml` package artifacts.
 

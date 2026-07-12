@@ -55,15 +55,15 @@ graph TB
 # Core install (lean — preprocessing, models, visualization)
 pip install -e .
 
-# With the interpretability stack (DiCE counterfactuals + ExplainerDashboard)
+# With the counterfactual explainability stack (DiCE)
 pip install -e '.[explainability]'
 
 # Using uv (recommended)
 uv pip install -e '.[explainability]'
 ```
 
-Requires Python 3.10+. The `explainability` extra pulls in the heavier
-`dice-ml` and `explainerdashboard` dependencies; the core install stays lean.
+Requires Python 3.10+. The `explainability` extra pulls in the heavier `dice-ml`
+dependency for counterfactuals; the core install stays lean.
 
 ## Quick Start
 
@@ -226,7 +226,6 @@ All transforms are sklearn-compatible (`fit`/`transform`):
 | `mf.plot_confusion_matrix()` | Plot confusion matrix with labels |
 | `mf.plot_feature_importance()` | Plot top feature importances |
 | `mf.plot_counterfactual_heatmap()` | Heatmap of a counterfactual vs class references |
-| `mf.launch_dashboard()` | Launch interactive ExplainerDashboard |
 
 ### Explainability
 
