@@ -16,8 +16,10 @@ from .explainability import (
     BaseExplainer,
     CounterfactualResult,
     DiCEExplainer,
+    counterfactual_concordance,
     counterfactual_importance,
     explain_counterfactual,
+    plausible_range,
 )
 from .main import main
 from .main import run_pipeline as _run_pipeline_internal
@@ -35,6 +37,7 @@ from .visualization import (
     launch_dashboard,
     plot_abundance_histogram,
     plot_confusion_matrix,
+    plot_counterfactual_heatmap,
     plot_feature_importance,
     plot_prevalence_abundance,
     plot_prevalence_histogram,
@@ -186,6 +189,9 @@ __all__ = [
     "explain_counterfactual",
     "counterfactual_importance",
     "CounterfactualResult",
+    "plausible_range",
+    "counterfactual_concordance",
+    "plot_counterfactual_heatmap",
     "BaseExplainer",
     "DiCEExplainer",
     # Utilities
